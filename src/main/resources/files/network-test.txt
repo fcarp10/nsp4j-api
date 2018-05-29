@@ -1,0 +1,38 @@
+?SNDlib
+
+# NODE SECTION
+#
+# <node_id> [(<longitude>, <latitude>)]
+
+NODES (
+  S11 ( 90 220 )
+  S21 ( 190 220 )
+  E1 ( 100 200 )
+  E2 ( 200 200 )
+  A1 ( 100 100 )
+)
+
+# LINK SECTION
+#
+# <link_id> ( <generator> <target> ) <pre_installed_capacity> <pre_installed_capacity_cost> <routing_cost> <setup_cost> ( {<module_capacity> <module_cost>}* )
+
+LINKS (
+  L1 ( E1 A1 ) 0.00 0.00 ( 1000.00 0.00 )
+  L2 ( E2 A1 ) 0.00 0.00 ( 1000.00 0.00 )
+)
+
+# DEMAND SECTION
+#
+# <demand_id> ( <generator> <target> ) <routing_unit> <demand_value> <max_path_length>
+# 10 Gbps demands ( routing_unit 1)
+
+DEMANDS (
+)
+
+# ADMISSIBLE PATHS SECTION
+#
+# <demand_id> ( {<path_id> ( <link_id>+ )}+ )
+
+ADMISSIBLE_PATHS (
+E1-A1-E2
+)
