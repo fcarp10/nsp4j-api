@@ -2,20 +2,20 @@ package services;
 
 public class Function {
 
-    private String id;
+    private int id;
     private boolean replicable;
     private double load;
 
     public Function() {
     }
 
-    public Function(String id, boolean replicable, double load) {
+    public Function(int id, boolean replicable, double load) {
         this.id = id;
         this.replicable = replicable;
         this.load = load;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

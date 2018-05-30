@@ -5,11 +5,9 @@
 # <node_id> [(<longitude>, <latitude>)]
 
 NODES (
-  S11 ( 90 220 )
-  S21 ( 190 220 )
-  E1 ( 100 200 )
-  E2 ( 200 200 )
-  A1 ( 100 100 )
+  N1 ( 100 200 )
+  N2 ( 200 200 )
+  N3 ( 100 100 )
 )
 
 # LINK SECTION
@@ -17,8 +15,8 @@ NODES (
 # <link_id> ( <generator> <target> ) <pre_installed_capacity> <pre_installed_capacity_cost> <routing_cost> <setup_cost> ( {<module_capacity> <module_cost>}* )
 
 LINKS (
-  L1 ( E1 A1 ) 0.00 0.00 ( 1000.00 0.00 )
-  L2 ( E2 A1 ) 0.00 0.00 ( 1000.00 0.00 )
+  L1 ( N1 N2 ) 0.00 0.00 ( 1000.00 0.00 )
+  L2 ( N2 N3 ) 0.00 0.00 ( 1000.00 0.00 )
 )
 
 # DEMAND SECTION
@@ -34,5 +32,5 @@ DEMANDS (
 # <demand_id> ( {<path_id> ( <link_id>+ )}+ )
 
 ADMISSIBLE_PATHS (
-E1-A1-E2
+N1-N2-N3
 )

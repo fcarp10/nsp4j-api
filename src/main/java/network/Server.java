@@ -4,16 +4,14 @@ import graph.elements.vertex.VertexElement;
 
 public class Server {
 
-    protected VertexElement vertexParent;
-    protected VertexElement vertex;
-    protected String id;
-    protected Double capacity;
-    protected Double reliability;
+    private VertexElement vertexParent;
+    private String id;
+    private Double capacity;
+    private Double reliability;
 
-    public Server(VertexElement vertexParent, VertexElement vertex, Double capacity) {
-        this.id = vertex.getVertexID();
+    public Server(String id, VertexElement vertexParent, Double capacity) {
+        this.id = id;
         this.vertexParent = vertexParent;
-        this.vertex = vertex;
         this.capacity = capacity;
     }
 
@@ -33,7 +31,7 @@ public class Server {
         return reliability;
     }
 
-    public VertexElement getVertex() {
-        return vertex;
+    public void setReliability(Double reliability) {
+        this.reliability = reliability;
     }
 }

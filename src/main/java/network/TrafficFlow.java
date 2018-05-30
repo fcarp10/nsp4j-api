@@ -6,7 +6,7 @@ import graph.path.PathElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EndPoint {
+public class TrafficFlow {
 
     private String source;
     private String destination;
@@ -14,12 +14,12 @@ public class EndPoint {
     private List<Double> trafficDemands;
     private List<PathElement> admissiblePaths;
 
-    public EndPoint() {
+    public TrafficFlow() {
         trafficDemands = new ArrayList<>();
         admissiblePaths = new ArrayList<>();
     }
 
-    public EndPoint(String source, String destination) {
+    public TrafficFlow(String source, String destination) {
         this.source = source;
         this.destination = destination;
         trafficDemands = new ArrayList<>();

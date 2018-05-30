@@ -1,24 +1,40 @@
 package services;
 
 
+import network.TrafficFlow;
+
+import java.util.List;
+
 public class Service {
 
-    private String id;
-    private Function[] functions;
+    private int id;
+    private List<Function> functions;
+    private TrafficFlow trafficFlow;
 
     public Service() {
     }
 
-    public Service(String id, Function[] functions) {
-        this.id = id;
-        this.functions = functions;
-    }
-
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public Function[] getFunctions() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Function> getFunctions() {
         return functions;
+    }
+
+    public void setFunctions(List<Function> functions) {
+        this.functions = functions;
+    }
+
+    public TrafficFlow getTrafficFlow() {
+        return trafficFlow;
+    }
+
+    public void setTrafficFlow(TrafficFlow trafficFlow) {
+        this.trafficFlow = trafficFlow;
     }
 }

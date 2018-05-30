@@ -6,26 +6,27 @@ gap: 0
 alpha: 0
 beta: 1
 serverCapacity: 1000
+serversPerNode: 2
 
 services:
-  - id: "0"
+  - id: 0
     functions:
-    - id: "0"
+    - id: 0
       replicable: false
       load: 0.2
-    - id: "1"
+    - id: 1
       replicable: true
       load: 1.0
-    - id: "2"
+    - id: 2
       replicable: false
       load: 0.2
 
-endPoints:
-  - source: "S1"
-    destination: "S2"
+trafficFlows:
+  - source: "N1"
+    destination: "N3"
     serviceId: 0
 
-minDemmands: 3
-maxDemmands: 3
+minDemands: 3
+maxDemands: 3
 minBw: 200
 maxBw: 200
