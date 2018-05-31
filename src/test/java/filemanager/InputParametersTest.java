@@ -11,12 +11,9 @@ public class InputParametersTest {
     @Test
     public void inputParameters() {
 
-        inputParameters = ConfigFiles.readInputParameters("/config-test.yml");
+        inputParameters = ConfigFiles.readInputParameters("/config.yml");
         inputParameters.initializeParameters();
         assertNotNull(inputParameters.getNetworkFile());
-        assertNotNull(GraphManager.getGraph().getVertexSet());
-        assertNotNull(GraphManager.getGraph().getEdgeSet());
-        assertNotNull(GraphManager.getPaths());
         assertNotNull(inputParameters.getTrafficFlows().get(0).getAdmissiblePaths());
         assertNotNull(inputParameters.getTrafficFlows().get(0).getTrafficDemands());
         assertNotNull(inputParameters.getServers());

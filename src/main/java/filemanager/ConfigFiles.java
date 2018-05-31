@@ -28,7 +28,7 @@ public class ConfigFiles {
 
     public static InputParameters readInputParameters(String filename) {
 
-        TypeReference<InputParameters> typeReference = new TypeReference<InputParameters>() {
+        TypeReference<InputParameters> typeReference = new TypeReference<>() {
         };
         InputStream inputStream = TypeReference.class.getResourceAsStream(filename);
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());

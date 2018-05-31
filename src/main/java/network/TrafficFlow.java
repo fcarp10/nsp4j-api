@@ -1,45 +1,50 @@
 package network;
 
-
-import graph.path.PathElement;
+import filemanager.GraphManager;
+import org.graphstream.algorithm.Dijkstra;
+import org.graphstream.graph.Path;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
 
 public class TrafficFlow {
 
-    private String source;
-    private String destination;
+    private String src;
+    private String dst;
     private int serviceId;
     private List<Double> trafficDemands;
-    private List<PathElement> admissiblePaths;
+    private List<Path> admissiblePaths;
 
     public TrafficFlow() {
         trafficDemands = new ArrayList<>();
         admissiblePaths = new ArrayList<>();
     }
 
-    public TrafficFlow(String source, String destination) {
-        this.source = source;
-        this.destination = destination;
-        trafficDemands = new ArrayList<>();
-        admissiblePaths = new ArrayList<>();
+    public void setPaths() {
+        Dijkstra dijkstra = new Dijkstra();
+        dijkstra.init(GraphManager.getGraph());
+        dijkstra.setSource(GraphManager.getGraph().getNode(src));
+        dijkstra.compute();
+        Iterator<Path> pathIterator = dijkstra.getAllPathsIterator(GraphManager.getGraph().getNode(dst));
+        pathIterator.forEachRemaining(admissiblePaths::add);
     }
 
-    public String getSource() {
-        return source;
+    public String getSrc() {
+        return src;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setSrc(String src) {
+        this.src = src;
     }
 
-    public String getDestination() {
-        return destination;
+    public String getDst() {
+        return dst;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setDst(String dst) {
+        this.dst = dst;
     }
 
     public int getServiceId() {
@@ -54,11 +59,11 @@ public class TrafficFlow {
         return trafficDemands;
     }
 
-    public List<PathElement> getAdmissiblePaths() {
+    public List<Path> getAdmissiblePaths() {
         return admissiblePaths;
     }
 
-    public void setAdmissiblePath(PathElement admissiblePath) {
+    public void setAdmissiblePath(Path admissiblePath) {
         this.admissiblePaths.add(admissiblePath);
     }
 

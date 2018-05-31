@@ -1,22 +1,22 @@
 package network;
 
-import graph.elements.vertex.VertexElement;
+import org.graphstream.graph.Node;
 
 public class Server {
 
-    private VertexElement vertexParent;
+    private Node nodeParent;
     private String id;
     private Double capacity;
     private Double reliability;
 
-    public Server(String id, VertexElement vertexParent, Double capacity) {
+    public Server(String id, Node nodeParent, Double capacity) {
         this.id = id;
-        this.vertexParent = vertexParent;
+        this.nodeParent = nodeParent;
         this.capacity = capacity;
     }
 
-    public VertexElement getVertexParent() {
-        return vertexParent;
+    public Node getVertexParent() {
+        return nodeParent;
     }
 
     public String getId() {

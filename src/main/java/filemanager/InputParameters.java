@@ -1,11 +1,10 @@
 package filemanager;
 
 
-import graph.elements.edge.EdgeElement;
-import graph.elements.vertex.VertexElement;
-import graph.path.PathElement;
 import network.Server;
 import network.TrafficFlow;
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Node;
 import services.Service;
 
 import java.math.BigInteger;
@@ -32,8 +31,8 @@ public class InputParameters {
     private int seedCounter;
     private List<Long> seeds;
 
-    private List<VertexElement> nodes;
-    private List<EdgeElement> links;
+    private List<Node> nodes;
+    private List<Edge> links;
     private List<Server> servers;
     private List<Service> services;
     private List<TrafficFlow> trafficFlows;
@@ -52,23 +51,19 @@ public class InputParameters {
 
     public void initializeParameters() {
         readSeeds("seeds.txt");
-        GraphManager.importTopology(networkFile, bidirectionalLinks);
-        nodes.addAll(GraphManager.getGraph().getVertexSet());
+        GraphManager.importTopology(networkFile);
+        nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         initializeServers();
-        mapPathsToTrafficFlows(GraphManager.getPaths());
+        mapPathsToTrafficFlows();
         mapTrafficDemandsToTrafficFlows();
         mapTrafficFlowsToServices();
         calculateAuxiliaryValues();
     }
 
-    private void mapPathsToTrafficFlows(List<PathElement> paths) {
-        for (PathElement p : paths)
-            for (TrafficFlow trafficFlow : trafficFlows)
-                if (p.getSourceID().equals(trafficFlow.getSource()) && p.getDestinationID().equals(trafficFlow.getDestination())) {
-                    trafficFlow.setAdmissiblePath(p);
-                    break;
-                }
+    private void mapPathsToTrafficFlows() {
+        for (TrafficFlow trafficFlow : trafficFlows)
+            trafficFlow.setPaths();
     }
 
     private void mapTrafficDemandsToTrafficFlows() {
@@ -85,13 +80,13 @@ public class InputParameters {
     }
 
     private void initializeServers() {
-        for (VertexElement node : GraphManager.getGraph().getVertexSet())
+        for (Node node : GraphManager.getGraph().getNodeSet())
             for (int s = 0; s < serversPerNode; s++) {
-                servers.add(new Server("S" + s + "-" + node.getVertexID(), node, serverCapacity));
+                servers.add(new Server("S" + s + "-" + node.getId(), node, serverCapacity));
             }
     }
 
-    private void calculateAuxiliaryValues(){
+    private void calculateAuxiliaryValues() {
         auxPathsPerTrafficFlow = 0;
         for (TrafficFlow trafficFlow : trafficFlows)
             if (trafficFlow.getAdmissiblePaths().size() > auxPathsPerTrafficFlow)
@@ -103,8 +98,8 @@ public class InputParameters {
                 auxDemandsPerTrafficFlow = trafficFlow.getTrafficDemands().size();
 
         auxServiceLength = 0;
-        for (Service service: services)
-            if(service.getFunctions().size() > auxServiceLength)
+        for (Service service : services)
+            if (service.getFunctions().size() > auxServiceLength)
                 auxServiceLength = service.getFunctions().size();
     }
 
@@ -251,11 +246,11 @@ public class InputParameters {
         return servers;
     }
 
-    public List<VertexElement> getNodes() {
+    public List<Node> getNodes() {
         return nodes;
     }
 
-    public List<EdgeElement> getLinks() {
+    public List<Edge> getLinks() {
         return links;
     }
 
