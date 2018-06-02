@@ -40,6 +40,7 @@ public class InputParameters {
     private int auxPathsPerTrafficFlow;
     private int auxDemandsPerTrafficFlow;
     private int auxServiceLength;
+    private double auxTotalTraffic;
 
     public InputParameters() {
         nodes = new ArrayList<>();
@@ -101,6 +102,10 @@ public class InputParameters {
         for (Service service : services)
             if (service.getFunctions().size() > auxServiceLength)
                 auxServiceLength = service.getFunctions().size();
+
+        for (TrafficFlow trafficFlow : trafficFlows)
+            for (Double trafficDemand : trafficFlow.getTrafficDemands())
+                auxTotalTraffic += trafficDemand;
     }
 
     private void readSeeds(String file) {
@@ -264,5 +269,9 @@ public class InputParameters {
 
     public int getAuxServiceLength() {
         return auxServiceLength;
+    }
+
+    public double getAuxTotalTraffic() {
+        return auxTotalTraffic;
     }
 }
