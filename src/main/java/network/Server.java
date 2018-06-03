@@ -15,7 +15,14 @@ public class Server {
         this.capacity = capacity;
     }
 
-    public Node getVertexParent() {
+    public Server(String id, Node nodeParent, Double capacity, Double reliability) {
+        this.id = id;
+        this.nodeParent = nodeParent;
+        this.capacity = capacity;
+        this.reliability = reliability;
+    }
+
+    public Node getNodeParent() {
         return nodeParent;
     }
 

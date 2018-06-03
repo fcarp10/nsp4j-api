@@ -52,7 +52,7 @@ public class InputParameters {
 
     public void initializeParameters() {
         readSeeds("seeds.txt");
-        GraphManager.importTopology(networkFile);
+        GraphManager.importTopology(networkFile + ".dgs");
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         initializeServers();
@@ -83,7 +83,7 @@ public class InputParameters {
     private void initializeServers() {
         for (Node node : GraphManager.getGraph().getNodeSet())
             for (int s = 0; s < serversPerNode; s++) {
-                servers.add(new Server("S" + s + "-" + node.getId(), node, serverCapacity));
+                servers.add(new Server(node.getId() + "-" + s, node, serverCapacity));
             }
     }
 
