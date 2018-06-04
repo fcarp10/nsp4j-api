@@ -50,9 +50,9 @@ public class InputParameters {
         trafficFlows = new ArrayList<>();
     }
 
-    public void initializeParameters() {
-        readSeeds("seeds.txt");
-        GraphManager.importTopology(networkFile + ".dgs");
+    public void initializeParameters(String networkFilePath) {
+        readSeeds("/seeds.txt");
+        GraphManager.importTopology(networkFilePath + networkFile + ".dgs");
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         initializeServers();
@@ -109,7 +109,7 @@ public class InputParameters {
     }
 
     private void readSeeds(String file) {
-        Scanner scanner = new ConfigFiles().scanPlainTextFile(file);
+        Scanner scanner = new ConfigFiles().scanPlainTextFileInResources(file);
         seeds = new ArrayList<>();
 
         while (scanner.hasNextLine()) {

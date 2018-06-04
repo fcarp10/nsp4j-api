@@ -4,41 +4,33 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Scanner;
 
 public class ConfigFiles {
 
-    public static Scanner scanPlainTextFile(String filename) {
-
-        Scanner scannerTextPlain = null;
-        ClassLoader classLoader = ConfigFiles.class.getClassLoader();
-        File file = new File(classLoader.getResource(filename).getFile());
-
+    public static Scanner scanPlainTextFileInResources(String filename) {
+        InputStream inputStream = TypeReference.class.getResourceAsStream(filename);
+        Scanner scanner = null;
         try {
-            scannerTextPlain = new Scanner(file);
-        } catch (FileNotFoundException e) {
+            scanner = new Scanner(inputStream);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return scannerTextPlain;
+        return scanner;
     }
 
     public static InputParameters readInputParameters(String filename) {
-
-        TypeReference<InputParameters> typeReference = new TypeReference<>() {
-        };
-        InputStream inputStream = TypeReference.class.getResourceAsStream(filename);
+        String path = ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        path = path.replaceAll("%20", " ");
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         InputParameters inputParameters = null;
         try {
-            inputParameters = mapper.readValue(inputStream, typeReference);
-        } catch (IOException e) {
+            inputParameters = mapper.readValue(new File(path + filename), InputParameters.class);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return inputParameters;
     }
-
 }

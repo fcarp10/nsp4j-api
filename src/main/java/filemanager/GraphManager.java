@@ -14,10 +14,11 @@ public class GraphManager {
     private static Graph graph;
 
     public static void importTopology(String filename) {
+        String path = ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        path = path.replaceAll("%20", " ");
         graph = new SingleGraph("graph");
-
         try {
-            graph.read("src/main/resources/" + filename);
+            graph.read(path + filename);
         } catch (IOException e) {
             log.error(e.getMessage());
         } catch (GraphParseException e) {
