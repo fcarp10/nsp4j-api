@@ -69,8 +69,11 @@ public class InputParameters {
 
     private void mapTrafficDemandsToTrafficFlows() {
         Random random = new Random();
-        for (TrafficFlow trafficFlow : trafficFlows)
-            trafficFlow.setTrafficDemand(minBw + (maxBw - minBw) * random.nextDouble());
+        for (TrafficFlow trafficFlow : trafficFlows) {
+            int numOfTrafficDemands = minDemands + (maxDemands - minDemands) * random.nextInt();
+            for (int td = 0; td < numOfTrafficDemands; td++)
+                trafficFlow.setTrafficDemand(minBw + (maxBw - minBw) * random.nextDouble());
+        }
     }
 
     private void mapTrafficFlowsToServices() {
