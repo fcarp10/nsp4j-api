@@ -1,7 +1,4 @@
 networkFile: network
-bidirectionalLinks: true
-minReplicas: 0
-maxReplicas: 3
 gap: 0
 alpha: 0
 beta: 1

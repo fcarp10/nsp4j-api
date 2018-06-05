@@ -16,9 +16,6 @@ import java.util.Scanner;
 public class InputParameters {
 
     private String networkFile;
-    private boolean bidirectionalLinks;
-    private int minReplicas;
-    private int maxReplicas;
     private double gap;
     private double alpha;
     private double beta;
@@ -136,30 +133,6 @@ public class InputParameters {
 
     public void setNetworkFile(String networkFile) {
         this.networkFile = networkFile;
-    }
-
-    public boolean isBidirectionalLinks() {
-        return bidirectionalLinks;
-    }
-
-    public void setBidirectionalLinks(boolean bidirectionalLinks) {
-        this.bidirectionalLinks = bidirectionalLinks;
-    }
-
-    public int getMinReplicas() {
-        return minReplicas;
-    }
-
-    public void setMinReplicas(int minReplicas) {
-        this.minReplicas = minReplicas;
-    }
-
-    public int getMaxReplicas() {
-        return maxReplicas;
-    }
-
-    public void setMaxReplicas(int maxReplicas) {
-        this.maxReplicas = maxReplicas;
     }
 
     public double getGap() {
