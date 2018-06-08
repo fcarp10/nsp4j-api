@@ -19,8 +19,10 @@ public class InputParameters {
     private double gap;
     private double alpha;
     private double beta;
+    private double aux;
     private double serverCapacity;
     private int serversPerNode;
+    private double linkCapacity;
     private int minDemands;
     private int maxDemands;
     private double minBw;
@@ -38,6 +40,7 @@ public class InputParameters {
     private int auxDemandsPerTrafficFlow;
     private int auxServiceLength;
     private double auxTotalTraffic;
+    private int auxTotalNumberOfFunctions;
 
     public InputParameters() {
         nodes = new ArrayList<>();
@@ -52,11 +55,28 @@ public class InputParameters {
         GraphManager.importTopology(networkFilePath + networkFile + ".dgs");
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
+        setLinkCapacity();
         initializeServers();
         mapPathsToTrafficFlows();
         mapTrafficDemandsToTrafficFlows();
         mapTrafficFlowsToServices();
         calculateAuxiliaryValues();
+    }
+
+    private void setLinkCapacity() {
+        for (Edge link : links)
+            if (link.getAttribute("capacity") == null)
+                link.addAttribute("capacity", linkCapacity);
+    }
+
+    private void initializeServers() {
+        for (Node node : GraphManager.getGraph().getNodeSet())
+            for (int s = 0; s < serversPerNode; s++) {
+                if (node.getAttribute("capacity") != null)
+                    servers.add(new Server(node.getId() + "-" + s, node, node.getAttribute("capacity")));
+                else
+                    servers.add(new Server(node.getId() + "-" + s, node, serverCapacity));
+            }
     }
 
     private void mapPathsToTrafficFlows() {
@@ -80,12 +100,6 @@ public class InputParameters {
                     service.setTrafficFlow(trafficFlow);
     }
 
-    private void initializeServers() {
-        for (Node node : GraphManager.getGraph().getNodeSet())
-            for (int s = 0; s < serversPerNode; s++) {
-                servers.add(new Server(node.getId() + "-" + s, node, serverCapacity));
-            }
-    }
 
     private void calculateAuxiliaryValues() {
         auxPathsPerTrafficFlow = 0;
@@ -106,6 +120,10 @@ public class InputParameters {
         for (TrafficFlow trafficFlow : trafficFlows)
             for (Double trafficDemand : trafficFlow.getTrafficDemands())
                 auxTotalTraffic += trafficDemand;
+
+        auxTotalNumberOfFunctions = 0;
+        for (Service service : services)
+            auxTotalNumberOfFunctions += service.getFunctions().size();
     }
 
     private void readSeeds(String file) {
@@ -159,6 +177,14 @@ public class InputParameters {
         this.beta = beta;
     }
 
+    public double getAux() {
+        return aux;
+    }
+
+    public void setAux(double aux) {
+        this.aux = aux;
+    }
+
     public double getServerCapacity() {
         return serverCapacity;
     }
@@ -173,6 +199,10 @@ public class InputParameters {
 
     public void setServersPerNode(int serversPerNode) {
         this.serversPerNode = serversPerNode;
+    }
+
+    public double getLinkCapacity() {
+        return linkCapacity;
     }
 
     public List<Service> getServices() {
@@ -249,5 +279,9 @@ public class InputParameters {
 
     public double getAuxTotalTraffic() {
         return auxTotalTraffic;
+    }
+
+    public int getAuxTotalNumberOfFunctions() {
+        return auxTotalNumberOfFunctions;
     }
 }

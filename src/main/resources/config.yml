@@ -2,8 +2,10 @@ networkFile: network
 gap: 0
 alpha: 0
 beta: 1
+aux: 100000
 serverCapacity: 1000
 serversPerNode: 2
+linkCapacity: 10
 
 services:
   - id: 0
