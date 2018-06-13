@@ -205,6 +205,10 @@ public class InputParameters {
         return linkCapacity;
     }
 
+    public void setLinkCapacity(double linkCapacity) {
+        this.linkCapacity = linkCapacity;
+    }
+
     public List<Service> getServices() {
         return services;
     }
