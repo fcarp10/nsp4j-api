@@ -60,7 +60,7 @@ public class GraphManager {
             for (int i = 0; i < pathNodes.length - 1; i++) {
                 Node node = graph.getNode(pathNodes[i]);
                 for (Edge edge : node.getEachEdge())
-                    if (edge.getOpposite(node).getId().equals(pathNodes[i + 1])) {
+                    if (edge.getTargetNode().getId().equals(pathNodes[i + 1])) {
                         path.push(node, edge);
                         break;
                     }
