@@ -26,7 +26,7 @@ public class TrafficFlow {
         admissiblePaths = new ArrayList<>();
     }
 
-    public void setPaths() {
+    public void setShortestPaths() {
         Dijkstra dijkstra = new Dijkstra();
         dijkstra.init(GraphManager.getGraph());
         Node srcNode = GraphManager.getGraph().getNode(src);
@@ -39,6 +39,12 @@ public class TrafficFlow {
         } else {
             log.error("The source and/or destination node names are wrong");
         }
+    }
+
+    public void setPaths(List<Path> allPaths) {
+        for (Path path : allPaths)
+            if (path.getNodePath().get(0).getId().equals(src) && path.getNodePath().get(path.size() - 1).getId().equals(dst))
+                admissiblePaths.add(path);
     }
 
     public String getSrc() {

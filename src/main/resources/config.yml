@@ -1,4 +1,5 @@
 networkFile: network
+pathsFile: paths
 gap: 0
 alpha: 1
 beta: 0

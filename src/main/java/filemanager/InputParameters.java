@@ -5,6 +5,7 @@ import network.Server;
 import network.TrafficFlow;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
+import org.graphstream.graph.Path;
 import services.Service;
 
 import java.math.BigInteger;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 public class InputParameters {
 
     private String networkFile;
+    private String pathsFile;
     private double gap;
     private double alpha;
     private double beta;
@@ -50,9 +52,10 @@ public class InputParameters {
         trafficFlows = new ArrayList<>();
     }
 
-    public void initializeParameters(String networkFilePath) {
+    public void initializeParameters() {
         readSeeds("/seeds.txt");
-        GraphManager.importTopology(networkFilePath + networkFile + ".dgs");
+        new GraphManager();
+        GraphManager.importTopology(networkFile + ".dgs");
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         setLinkCapacity();
@@ -80,8 +83,14 @@ public class InputParameters {
     }
 
     private void mapPathsToTrafficFlows() {
-        for (TrafficFlow trafficFlow : trafficFlows)
-            trafficFlow.setPaths();
+        if (pathsFile == null)
+            for (TrafficFlow trafficFlow : trafficFlows)
+                trafficFlow.setShortestPaths();
+        else {
+            List<Path> paths = GraphManager.importPaths(pathsFile + ".txt");
+            for (TrafficFlow trafficFlow : trafficFlows)
+                trafficFlow.setPaths(paths);
+        }
     }
 
     private void mapTrafficDemandsToTrafficFlows() {
@@ -151,6 +160,14 @@ public class InputParameters {
 
     public void setNetworkFile(String networkFile) {
         this.networkFile = networkFile;
+    }
+
+    public String getPathsFile() {
+        return pathsFile;
+    }
+
+    public void setPathsFile(String pathsFile) {
+        this.pathsFile = pathsFile;
     }
 
     public double getGap() {
