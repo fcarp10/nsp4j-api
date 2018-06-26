@@ -19,8 +19,7 @@ public class InputParameters {
     private String networkFile;
     private String pathsFile;
     private double gap;
-    private double alpha;
-    private double beta;
+    private double[] weights;
     private double aux;
     private double serverCapacity;
     private int serversPerNode;
@@ -178,20 +177,12 @@ public class InputParameters {
         this.gap = gap;
     }
 
-    public double getAlpha() {
-        return alpha;
+    public double[] getWeights() {
+        return weights;
     }
 
-    public void setAlpha(double alpha) {
-        this.alpha = alpha;
-    }
-
-    public double getBeta() {
-        return beta;
-    }
-
-    public void setBeta(double beta) {
-        this.beta = beta;
+    public void setWeights(double[] weights) {
+        this.weights = weights;
     }
 
     public double getAux() {
