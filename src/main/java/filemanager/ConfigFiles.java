@@ -21,7 +21,7 @@ public class ConfigFiles {
         return scanner;
     }
 
-    public static InputParameters readInputParameters(String filename) {
+    public static Parameters readParameters(String filename) {
         String path = null;
         try {
             path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
@@ -30,13 +30,13 @@ public class ConfigFiles {
         }
         path = path.replaceAll("%20", " ");
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        InputParameters inputParameters = null;
+        Parameters parameters = null;
         try {
-            inputParameters = mapper.readValue(new File(path + "/" + filename), InputParameters.class);
+            parameters = mapper.readValue(new File(path + "/" + filename), Parameters.class);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return inputParameters;
+        return parameters;
     }
 }

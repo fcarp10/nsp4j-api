@@ -6,6 +6,7 @@ import network.TrafficFlow;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
+import services.Function;
 import services.Service;
 
 import java.math.BigInteger;
@@ -14,16 +15,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class InputParameters {
+public class Parameters {
 
     private String networkFile;
     private String pathsFile;
     private double gap;
     private double[] weights;
-    private double aux;
     private double serverCapacity;
     private int serversPerNode;
     private double linkCapacity;
+    private int maxReplicas;
     private int minDemands;
     private int maxDemands;
     private double minBw;
@@ -37,13 +38,14 @@ public class InputParameters {
     private List<Service> services;
     private List<TrafficFlow> trafficFlows;
 
-    private int auxPathsPerTrafficFlow;
-    private int auxDemandsPerTrafficFlow;
-    private int auxServiceLength;
-    private double auxTotalTraffic;
-    private int auxTotalNumberOfFunctions;
+    private int pathsPerTrafficFlowAux;
+    private int demandsPerTrafficFlowAux;
+    private int serviceLengthAux;
+    private double totalTrafficAux;
+    private int totalNumberOfFunctionsAux;
+    private int totalNumberOfPossibleReplicasAux;
 
-    public InputParameters() {
+    public Parameters() {
         nodes = new ArrayList<>();
         links = new ArrayList<>();
         servers = new ArrayList<>();
@@ -51,7 +53,7 @@ public class InputParameters {
         trafficFlows = new ArrayList<>();
     }
 
-    public void initializeParameters() {
+    public void initialize() {
         readSeeds("/seeds.txt");
         new GraphManager();
         GraphManager.importTopology(networkFile + ".dgs");
@@ -110,28 +112,34 @@ public class InputParameters {
 
 
     private void calculateAuxiliaryValues() {
-        auxPathsPerTrafficFlow = 0;
+        pathsPerTrafficFlowAux = 0;
         for (TrafficFlow trafficFlow : trafficFlows)
-            if (trafficFlow.getAdmissiblePaths().size() > auxPathsPerTrafficFlow)
-                auxPathsPerTrafficFlow = trafficFlow.getAdmissiblePaths().size();
+            if (trafficFlow.getAdmissiblePaths().size() > pathsPerTrafficFlowAux)
+                pathsPerTrafficFlowAux = trafficFlow.getAdmissiblePaths().size();
 
-        auxDemandsPerTrafficFlow = 0;
+        demandsPerTrafficFlowAux = 0;
         for (TrafficFlow trafficFlow : trafficFlows)
-            if (trafficFlow.getTrafficDemands().size() > auxDemandsPerTrafficFlow)
-                auxDemandsPerTrafficFlow = trafficFlow.getTrafficDemands().size();
+            if (trafficFlow.getTrafficDemands().size() > demandsPerTrafficFlowAux)
+                demandsPerTrafficFlowAux = trafficFlow.getTrafficDemands().size();
 
-        auxServiceLength = 0;
+        serviceLengthAux = 0;
         for (Service service : services)
-            if (service.getFunctions().size() > auxServiceLength)
-                auxServiceLength = service.getFunctions().size();
+            if (service.getFunctions().size() > serviceLengthAux)
+                serviceLengthAux = service.getFunctions().size();
 
         for (TrafficFlow trafficFlow : trafficFlows)
             for (Double trafficDemand : trafficFlow.getTrafficDemands())
-                auxTotalTraffic += trafficDemand;
+                totalTrafficAux += trafficDemand;
 
-        auxTotalNumberOfFunctions = 0;
+        totalNumberOfFunctionsAux = 0;
         for (Service service : services)
-            auxTotalNumberOfFunctions += service.getFunctions().size();
+            totalNumberOfFunctionsAux += service.getFunctions().size();
+
+        totalNumberOfPossibleReplicasAux = 0;
+        for (Service service : services)
+            for (Function f : service.getFunctions())
+                if (f.isReplicable())
+                    totalNumberOfPossibleReplicasAux += maxReplicas;
     }
 
     private void readSeeds(String file) {
@@ -185,14 +193,6 @@ public class InputParameters {
         this.weights = weights;
     }
 
-    public double getAux() {
-        return aux;
-    }
-
-    public void setAux(double aux) {
-        this.aux = aux;
-    }
-
     public double getServerCapacity() {
         return serverCapacity;
     }
@@ -215,6 +215,14 @@ public class InputParameters {
 
     public void setLinkCapacity(double linkCapacity) {
         this.linkCapacity = linkCapacity;
+    }
+
+    public int getMaxReplicas() {
+        return maxReplicas;
+    }
+
+    public void setMaxReplicas(int maxReplicas) {
+        this.maxReplicas = maxReplicas;
     }
 
     public List<Service> getServices() {
@@ -277,23 +285,27 @@ public class InputParameters {
         return links;
     }
 
-    public int getAuxPathsPerTrafficFlow() {
-        return auxPathsPerTrafficFlow;
+    public int getPathsPerTrafficFlowAux() {
+        return pathsPerTrafficFlowAux;
     }
 
-    public int getAuxDemandsPerTrafficFlow() {
-        return auxDemandsPerTrafficFlow;
+    public int getDemandsPerTrafficFlowAux() {
+        return demandsPerTrafficFlowAux;
     }
 
-    public int getAuxServiceLength() {
-        return auxServiceLength;
+    public int getServiceLengthAux() {
+        return serviceLengthAux;
     }
 
-    public double getAuxTotalTraffic() {
-        return auxTotalTraffic;
+    public double getTotalTrafficAux() {
+        return totalTrafficAux;
     }
 
-    public int getAuxTotalNumberOfFunctions() {
-        return auxTotalNumberOfFunctions;
+    public int getTotalNumberOfFunctionsAux() {
+        return totalNumberOfFunctionsAux;
+    }
+
+    public int getTotalNumberOfPossibleReplicasAux() {
+        return totalNumberOfPossibleReplicasAux;
     }
 }
