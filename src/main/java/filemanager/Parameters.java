@@ -36,6 +36,7 @@ public class Parameters {
     private List<Edge> links;
     private List<Server> servers;
     private List<Service> services;
+    private List<Service> serviceTypes;
     private List<TrafficFlow> trafficFlows;
 
     private int pathsPerTrafficFlowAux;
@@ -50,11 +51,12 @@ public class Parameters {
         links = new ArrayList<>();
         servers = new ArrayList<>();
         services = new ArrayList<>();
+        serviceTypes = new ArrayList<>();
         trafficFlows = new ArrayList<>();
     }
 
     public void initialize() {
-        readSeeds("/seeds.txt");
+        readSeeds();
         new GraphManager();
         GraphManager.importTopology(networkFile + ".dgs");
         nodes.addAll(GraphManager.getGraph().getNodeSet());
@@ -63,7 +65,7 @@ public class Parameters {
         initializeServers();
         mapPathsToTrafficFlows();
         mapTrafficDemandsToTrafficFlows();
-        mapTrafficFlowsToServices();
+        mapTrafficFlowsToTypeOfService();
         calculateAuxiliaryValues();
     }
 
@@ -103,13 +105,16 @@ public class Parameters {
         }
     }
 
-    private void mapTrafficFlowsToServices() {
+    private void mapTrafficFlowsToTypeOfService() {
         for (TrafficFlow trafficFlow : trafficFlows)
-            for (Service service : services)
-                if (trafficFlow.getServiceId() == service.getId())
+            for (Service service : serviceTypes)
+                if (trafficFlow.getServiceId() == service.getId()) {
+                    services.add(service);
+                    ///////
                     service.setTrafficFlow(trafficFlow);
+                    //////
+                }
     }
-
 
     private void calculateAuxiliaryValues() {
         pathsPerTrafficFlowAux = 0;
@@ -142,8 +147,9 @@ public class Parameters {
                     totalNumberOfPossibleReplicasAux += maxReplicas;
     }
 
-    private void readSeeds(String file) {
-        Scanner scanner = new ConfigFiles().scanPlainTextFileInResources(file);
+    private void readSeeds() {
+        new ConfigFiles();
+        Scanner scanner = ConfigFiles.scanPlainTextFileInResources("/seeds.txt");
         seeds = new ArrayList<>();
 
         while (scanner.hasNextLine()) {
@@ -231,6 +237,10 @@ public class Parameters {
 
     public void setServices(List<Service> services) {
         this.services = services;
+    }
+
+    public void setServiceTypes(List<Service> serviceTypes) {
+        this.serviceTypes = serviceTypes;
     }
 
     public List<TrafficFlow> getTrafficFlows() {

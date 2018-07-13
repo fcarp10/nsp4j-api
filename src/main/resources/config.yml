@@ -6,8 +6,7 @@ serverCapacity: 1000
 serversPerNode: 1
 linkCapacity: 1000
 maxReplicas: 3
-
-services:
+serviceTypes:
   - id: 0
     functions:
     - id: 0
@@ -19,12 +18,10 @@ services:
     - id: 2
       replicable: false
       load: 1.0
-
 trafficFlows:
   - src: "n1"
     dst: "n9"
     serviceId: 0
-
 minDemands: 3
 maxDemands: 3
 minBw: 100
