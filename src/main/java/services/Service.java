@@ -8,10 +8,17 @@ import java.util.List;
 public class Service {
 
     private int id;
-    private List<Function> functions;
+    private int[] chain;
+    private transient List<Function> functions;
     private TrafficFlow trafficFlow;
 
     public Service() {
+    }
+
+    public Service(int id, List<Function> functions, TrafficFlow trafficFlow) {
+        this.id = id;
+        this.functions = functions;
+        this.trafficFlow = trafficFlow;
     }
 
     public int getId() {
@@ -20,6 +27,14 @@ public class Service {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int[] getChain() {
+        return chain;
+    }
+
+    public void setChain(int[] chain) {
+        this.chain = chain;
     }
 
     public List<Function> getFunctions() {

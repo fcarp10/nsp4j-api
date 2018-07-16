@@ -10,10 +10,7 @@ import services.Function;
 import services.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Parameters {
 
@@ -36,8 +33,10 @@ public class Parameters {
     private List<Edge> links;
     private List<Server> servers;
     private List<Service> services;
-    private List<Service> serviceTypes;
+
     private List<TrafficFlow> trafficFlows;
+    private Map<Integer, Function> functionTypes;
+    private Map<Integer, Service> serviceTypes;
 
     private int pathsPerTrafficFlowAux;
     private int demandsPerTrafficFlowAux;
@@ -51,8 +50,9 @@ public class Parameters {
         links = new ArrayList<>();
         servers = new ArrayList<>();
         services = new ArrayList<>();
-        serviceTypes = new ArrayList<>();
         trafficFlows = new ArrayList<>();
+        functionTypes = new HashMap<>();
+        serviceTypes = new HashMap<>();
     }
 
     public void initialize() {
@@ -65,7 +65,7 @@ public class Parameters {
         initializeServers();
         mapPathsToTrafficFlows();
         mapTrafficDemandsToTrafficFlows();
-        mapTrafficFlowsToTypeOfService();
+        createSetOfServices();
         calculateAuxiliaryValues();
     }
 
@@ -105,15 +105,14 @@ public class Parameters {
         }
     }
 
-    private void mapTrafficFlowsToTypeOfService() {
-        for (TrafficFlow trafficFlow : trafficFlows)
-            for (Service service : serviceTypes)
-                if (trafficFlow.getServiceId() == service.getId()) {
-                    services.add(service);
-                    ///////
-                    service.setTrafficFlow(trafficFlow);
-                    //////
-                }
+    private void createSetOfServices() {
+        for (TrafficFlow trafficFlow : trafficFlows) {
+            Service serviceType = serviceTypes.get(trafficFlow.getServiceId());
+            List<Function> functions = new ArrayList<>();
+            for (Integer i : serviceType.getChain())
+                functions.add(functionTypes.get(i));
+            services.add(new Service(serviceType.getId(), functions, trafficFlow));
+        }
     }
 
     private void calculateAuxiliaryValues() {
@@ -239,7 +238,11 @@ public class Parameters {
         this.services = services;
     }
 
-    public void setServiceTypes(List<Service> serviceTypes) {
+    public void setFunctionTypes(Map<Integer, Function> functionTypes) {
+        this.functionTypes = functionTypes;
+    }
+
+    public void setServiceTypes(Map<Integer, Service> serviceTypes) {
         this.serviceTypes = serviceTypes;
     }
 

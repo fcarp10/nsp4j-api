@@ -6,7 +6,7 @@
 
     <groupId>de.tubs</groupId>
     <artifactId>nfv-framework</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
 
     <properties>
         <java.version>9</java.version>
