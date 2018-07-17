@@ -33,6 +33,7 @@ public class Parameters {
     private List<Edge> links;
     private List<Server> servers;
     private List<Service> services;
+    private List<Path> paths;
 
     private List<TrafficFlow> trafficFlows;
     private Map<Integer, Function> functionTypes;
@@ -50,6 +51,7 @@ public class Parameters {
         links = new ArrayList<>();
         servers = new ArrayList<>();
         services = new ArrayList<>();
+        paths = new ArrayList<>();
         trafficFlows = new ArrayList<>();
         functionTypes = new HashMap<>();
         serviceTypes = new HashMap<>();
@@ -90,7 +92,7 @@ public class Parameters {
             for (TrafficFlow trafficFlow : trafficFlows)
                 trafficFlow.setShortestPaths();
         else {
-            List<Path> paths = GraphManager.importPaths(pathsFile + ".txt");
+            paths = GraphManager.importPaths(pathsFile + ".txt");
             for (TrafficFlow trafficFlow : trafficFlows)
                 trafficFlow.setPaths(paths);
         }
@@ -248,6 +250,10 @@ public class Parameters {
 
     public List<TrafficFlow> getTrafficFlows() {
         return trafficFlows;
+    }
+
+    public List<Path> getPaths() {
+        return paths;
     }
 
     public void setTrafficFlows(List<TrafficFlow> trafficFlows) {
