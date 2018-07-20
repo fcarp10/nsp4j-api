@@ -24,8 +24,8 @@ public class Parameters {
     private int maxReplicas;
     private int minDemands;
     private int maxDemands;
-    private double minBw;
-    private double maxBw;
+    private int minBw;
+    private int maxBw;
     private int seedCounter;
     private List<Long> seeds;
 
@@ -103,7 +103,7 @@ public class Parameters {
         for (TrafficFlow trafficFlow : trafficFlows) {
             int numOfTrafficDemands = minDemands + (maxDemands - minDemands) * random.nextInt();
             for (int td = 0; td < numOfTrafficDemands; td++)
-                trafficFlow.setTrafficDemand(minBw + (maxBw - minBw) * random.nextDouble());
+                trafficFlow.setTrafficDemand(random.nextInt(maxBw + 1 - minBw) + minBw);
         }
     }
 
@@ -134,7 +134,7 @@ public class Parameters {
                 serviceLengthAux = service.getFunctions().size();
 
         for (TrafficFlow trafficFlow : trafficFlows)
-            for (Double trafficDemand : trafficFlow.getTrafficDemands())
+            for (int trafficDemand : trafficFlow.getTrafficDemands())
                 totalTrafficAux += trafficDemand;
 
         totalNumberOfFunctionsAux = 0;
@@ -280,7 +280,7 @@ public class Parameters {
         return minBw;
     }
 
-    public void setMinBw(double minBw) {
+    public void setMinBw(int minBw) {
         this.minBw = minBw;
     }
 
@@ -288,7 +288,7 @@ public class Parameters {
         return maxBw;
     }
 
-    public void setMaxBw(double maxBw) {
+    public void setMaxBw(int maxBw) {
         this.maxBw = maxBw;
     }
 

@@ -18,7 +18,7 @@ public class TrafficFlow {
     private String src;
     private String dst;
     private int serviceId;
-    private List<Double> trafficDemands;
+    private List<Integer> trafficDemands;
     private List<Path> admissiblePaths;
 
     public TrafficFlow() {
@@ -71,7 +71,7 @@ public class TrafficFlow {
         this.serviceId = serviceId;
     }
 
-    public List<Double> getTrafficDemands() {
+    public List<Integer> getTrafficDemands() {
         return trafficDemands;
     }
 
@@ -83,7 +83,7 @@ public class TrafficFlow {
         this.admissiblePaths.add(admissiblePath);
     }
 
-    public void setTrafficDemand(Double trafficDemand) {
+    public void setTrafficDemand(Integer trafficDemand) {
         trafficDemands.add(trafficDemand);
     }
 }
