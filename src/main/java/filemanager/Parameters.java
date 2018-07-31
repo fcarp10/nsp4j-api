@@ -18,15 +18,16 @@ public class Parameters {
     private String pathsFile;
     private double gap;
     private double[] weights;
-    private double serverCapacity;
+    private int serverCapacity;
     private int serversPerNode;
-    private double linkCapacity;
+    private int linkCapacity;
     private int maxReplicas;
     private int minDemands;
     private int maxDemands;
     private int minBw;
     private int maxBw;
     private int seedCounter;
+    private int[] auxValues;
     private List<Long> seeds;
 
     private List<Node> nodes;
@@ -204,7 +205,7 @@ public class Parameters {
         return serverCapacity;
     }
 
-    public void setServerCapacity(double serverCapacity) {
+    public void setServerCapacity(int serverCapacity) {
         this.serverCapacity = serverCapacity;
     }
 
@@ -220,7 +221,7 @@ public class Parameters {
         return linkCapacity;
     }
 
-    public void setLinkCapacity(double linkCapacity) {
+    public void setLinkCapacity(int linkCapacity) {
         this.linkCapacity = linkCapacity;
     }
 
@@ -326,5 +327,13 @@ public class Parameters {
 
     public int getTotalNumberOfPossibleReplicasAux() {
         return totalNumberOfPossibleReplicasAux;
+    }
+
+    public int[] getAuxValues() {
+        return auxValues;
+    }
+
+    public void setAuxValues(int[] auxValues) {
+        this.auxValues = auxValues;
     }
 }

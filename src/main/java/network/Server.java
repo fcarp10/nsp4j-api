@@ -6,16 +6,16 @@ public class Server {
 
     private Node nodeParent;
     private String id;
-    private Double capacity;
+    private int capacity;
     private Double reliability;
 
-    public Server(String id, Node nodeParent, Double capacity) {
+    public Server(String id, Node nodeParent, int capacity) {
         this.id = id;
         this.nodeParent = nodeParent;
         this.capacity = capacity;
     }
 
-    public Server(String id, Node nodeParent, Double capacity, Double reliability) {
+    public Server(String id, Node nodeParent, int capacity, Double reliability) {
         this.id = id;
         this.nodeParent = nodeParent;
         this.capacity = capacity;
@@ -30,7 +30,7 @@ public class Server {
         return id;
     }
 
-    public Double getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
