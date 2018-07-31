@@ -58,15 +58,15 @@ public class Parameters {
         serviceTypes = new HashMap<>();
     }
 
-    public void initialize() {
+    public void initialize(String path) {
         readSeeds();
         new GraphManager();
-        GraphManager.importTopology(networkFile + ".dgs");
+        GraphManager.importTopology(path, networkFile + ".dgs");
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         setLinkCapacity();
         initializeServers();
-        mapPathsToTrafficFlows();
+        mapPathsToTrafficFlows(path);
         mapTrafficDemandsToTrafficFlows();
         createSetOfServices();
         calculateAuxiliaryValues();
@@ -88,12 +88,12 @@ public class Parameters {
             }
     }
 
-    private void mapPathsToTrafficFlows() {
+    private void mapPathsToTrafficFlows(String path) {
         if (pathsFile == null)
             for (TrafficFlow trafficFlow : trafficFlows)
                 trafficFlow.setShortestPaths();
         else {
-            paths = GraphManager.importPaths(pathsFile + ".txt");
+            paths = GraphManager.importPaths(path, pathsFile + ".txt");
             for (TrafficFlow trafficFlow : trafficFlows)
                 trafficFlow.setPaths(paths);
         }

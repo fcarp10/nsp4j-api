@@ -9,11 +9,9 @@ import org.graphstream.stream.GraphParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,18 +20,8 @@ public class GraphManager {
 
     private static final Logger log = LoggerFactory.getLogger(GraphManager.class);
     private static Graph graph;
-    private static String path;
 
-    public GraphManager() {
-        try {
-            path = new File(GraphManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        path = path.replaceAll("%20", " ");
-    }
-
-    public static void importTopology(String filename) {
+    public static void importTopology(String path, String filename) {
         graph = new SingleGraph("graph");
         try {
             graph.read(path + "/" + filename);
@@ -44,11 +32,11 @@ public class GraphManager {
         }
     }
 
-    public static List<Path> importPaths(String filename) {
+    public static List<Path> importPaths(String stringPathFile, String filename) {
         List<Path> paths = new ArrayList<>();
         FileInputStream stream = null;
         try {
-            stream = new FileInputStream(path + "/" + filename);
+            stream = new FileInputStream(stringPathFile + "/" + filename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
