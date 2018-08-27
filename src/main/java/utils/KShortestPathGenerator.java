@@ -22,7 +22,7 @@ public class KShortestPathGenerator {
     }
 
     public void run() {
-        writePathsFile = new WritePathsFile("paths.txt");
+        writePathsFile = new WritePathsFile("test_scenario1.txt");
         for (Node src : GraphManager.getGraph().getNodeSet())
             for (Node dst : GraphManager.getGraph().getNodeSet())
                 if (!src.equals(dst))
@@ -30,7 +30,7 @@ public class KShortestPathGenerator {
     }
 
     public void run(Node src, Node dst) {
-        writePathsFile = new WritePathsFile("paths.txt");
+        writePathsFile = new WritePathsFile("test_scenario1.txt");
         if (!src.equals(dst))
             findPaths(src, dst);
     }

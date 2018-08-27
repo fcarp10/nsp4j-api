@@ -11,6 +11,8 @@ public class Service {
     private int[] chain;
     private transient List<Function> functions;
     private TrafficFlow trafficFlow;
+    private int minPaths;
+    private int maxPaths;
 
     public Service() {
     }
@@ -51,5 +53,21 @@ public class Service {
 
     public void setTrafficFlow(TrafficFlow trafficFlow) {
         this.trafficFlow = trafficFlow;
+    }
+
+    public int getMinPaths() {
+        return minPaths;
+    }
+
+    public void setMinPaths(int minPaths) {
+        this.minPaths = minPaths;
+    }
+
+    public int getMaxPaths() {
+        return maxPaths;
+    }
+
+    public void setMaxPaths(int maxPaths) {
+        this.maxPaths = maxPaths;
     }
 }

@@ -20,6 +20,10 @@ public class TrafficFlow {
     private int serviceId;
     private List<Integer> trafficDemands;
     private List<Path> admissiblePaths;
+    private int minDemands;
+    private int maxDemands;
+    private int minBw;
+    private int maxBw;
 
     public TrafficFlow() {
         trafficDemands = new ArrayList<>();
@@ -85,5 +89,37 @@ public class TrafficFlow {
 
     public void setTrafficDemand(Integer trafficDemand) {
         trafficDemands.add(trafficDemand);
+    }
+
+    public int getMinDemands() {
+        return minDemands;
+    }
+
+    public void setMinDemands(int minDemands) {
+        this.minDemands = minDemands;
+    }
+
+    public int getMaxDemands() {
+        return maxDemands;
+    }
+
+    public void setMaxDemands(int maxDemands) {
+        this.maxDemands = maxDemands;
+    }
+
+    public int getMinBw() {
+        return minBw;
+    }
+
+    public void setMinBw(int minBw) {
+        this.minBw = minBw;
+    }
+
+    public int getMaxBw() {
+        return maxBw;
+    }
+
+    public void setMaxBw(int maxBw) {
+        this.maxBw = maxBw;
     }
 }

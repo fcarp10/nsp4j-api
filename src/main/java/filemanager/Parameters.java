@@ -14,38 +14,44 @@ import java.util.*;
 
 public class Parameters {
 
-    private String networkFile;
-    private String pathsFile;
+    // Optimization parameters
     private double gap;
     private double[] weights;
-    private int serverCapacity;
-    private int serversPerNode;
-    private int linkCapacity;
-    private int maxReplicas;
-    private int minDemands;
-    private int maxDemands;
-    private int minBw;
-    private int maxBw;
-    private int seedCounter;
-    private int[] auxValues;
-    private List<Long> seeds;
 
+    // Network default parameters
+    private int serverCapacityDefault;
+    private int serversNodeDefault;
+    private int linkCapacityDefault;
+    private int minPathsDefault;
+    private int maxPathsDefault;
+    private int minDemandsDefault;
+    private int maxDemandsDefault;
+    private int minBwDefault;
+    private int maxBwDefault;
+
+    // NFV parameters
+    private List<Service> serviceChains;
+    private List<Function> functions;
+    private List<TrafficFlow> trafficFlows;
+
+    // Auxiliary
+    private int[] aux;
+
+    // *Local parameters
     private List<Node> nodes;
     private List<Edge> links;
     private List<Server> servers;
     private List<Service> services;
     private List<Path> paths;
-
-    private List<TrafficFlow> trafficFlows;
-    private Map<Integer, Function> functionTypes;
-    private Map<Integer, Service> serviceTypes;
-
     private int pathsPerTrafficFlowAux;
     private int demandsPerTrafficFlowAux;
     private int serviceLengthAux;
     private double totalTrafficAux;
     private int totalNumberOfFunctionsAux;
     private int totalNumberOfPossibleReplicasAux;
+    private List<Long> seeds;
+    private int seedCounter;
+    private String scenario;
 
     public Parameters() {
         nodes = new ArrayList<>();
@@ -54,18 +60,18 @@ public class Parameters {
         services = new ArrayList<>();
         paths = new ArrayList<>();
         trafficFlows = new ArrayList<>();
-        functionTypes = new HashMap<>();
-        serviceTypes = new HashMap<>();
+        functions = new ArrayList<>();
+        serviceChains = new ArrayList<>();
     }
 
     public void initialize(String path) {
         readSeeds();
         new GraphManager();
-        GraphManager.importTopology(path, networkFile + ".dgs");
+        GraphManager.importTopology(path, scenario + ".dgs");
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         setLinkCapacity();
-        initializeServers();
+        createServers();
         mapPathsToTrafficFlows(path);
         mapTrafficDemandsToTrafficFlows();
         createSetOfServices();
@@ -75,47 +81,68 @@ public class Parameters {
     private void setLinkCapacity() {
         for (Edge link : links)
             if (link.getAttribute("capacity") == null)
-                link.addAttribute("capacity", linkCapacity);
+                link.addAttribute("capacity", linkCapacityDefault);
     }
 
-    private void initializeServers() {
-        for (Node node : GraphManager.getGraph().getNodeSet())
-            for (int s = 0; s < serversPerNode; s++) {
+    private void createServers() {
+        for (Node node : GraphManager.getGraph().getNodeSet()) {
+            int serversNode;
+            if (node.getAttribute("serversNode") != null)
+                serversNode = node.getAttribute("serversNode");
+            else
+                serversNode = serversNodeDefault;
+            for (int s = 0; s < serversNode; s++) {
                 if (node.getAttribute("capacity") != null)
                     servers.add(new Server(node.getId() + "-" + s, node, node.getAttribute("capacity")));
                 else
-                    servers.add(new Server(node.getId() + "-" + s, node, serverCapacity));
+                    servers.add(new Server(node.getId() + "-" + s, node, serverCapacityDefault));
             }
+        }
     }
 
     private void mapPathsToTrafficFlows(String path) {
-        if (pathsFile == null)
-            for (TrafficFlow trafficFlow : trafficFlows)
-                trafficFlow.setShortestPaths();
-        else {
-            paths = GraphManager.importPaths(path, pathsFile + ".txt");
-            for (TrafficFlow trafficFlow : trafficFlows)
-                trafficFlow.setPaths(paths);
-        }
+        paths = GraphManager.importPaths(path, scenario + ".txt");
+        for (TrafficFlow trafficFlow : trafficFlows)
+            trafficFlow.setPaths(paths);
     }
 
     private void mapTrafficDemandsToTrafficFlows() {
         Random random = new Random();
         for (TrafficFlow trafficFlow : trafficFlows) {
-            int numOfTrafficDemands = minDemands + (maxDemands - minDemands) * random.nextInt();
+            int numOfTrafficDemands = minDemandsDefault + (maxDemandsDefault - minDemandsDefault) * random.nextInt();
             for (int td = 0; td < numOfTrafficDemands; td++)
-                trafficFlow.setTrafficDemand(random.nextInt(maxBw + 1 - minBw) + minBw);
+                trafficFlow.setTrafficDemand(random.nextInt(maxBwDefault + 1 - minBwDefault) + minBwDefault);
         }
     }
 
     private void createSetOfServices() {
         for (TrafficFlow trafficFlow : trafficFlows) {
-            Service serviceType = serviceTypes.get(trafficFlow.getServiceId());
+            Service service = getServiceChain(trafficFlow.getServiceId());
             List<Function> functions = new ArrayList<>();
-            for (Integer i : serviceType.getChain())
-                functions.add(functionTypes.get(i));
-            services.add(new Service(serviceType.getId(), functions, trafficFlow));
+            for (Integer type : service.getChain())
+                functions.add(getFunction(type));
+            services.add(new Service(service.getId(), functions, trafficFlow));
         }
+    }
+
+    private Service getServiceChain(int id) {
+        Service service = null;
+        for (Service s : serviceChains)
+            if (id == s.getId()) {
+                service = s;
+                break;
+            }
+        return service;
+    }
+
+    private Function getFunction(int type) {
+        Function function = null;
+        for (Function f : functions)
+            if (type == f.getType()) {
+                function = f;
+                break;
+            }
+        return function;
     }
 
     private void calculateAuxiliaryValues() {
@@ -146,7 +173,7 @@ public class Parameters {
         for (Service service : services)
             for (Function f : service.getFunctions())
                 if (f.isReplicable())
-                    totalNumberOfPossibleReplicasAux += maxReplicas;
+                    totalNumberOfPossibleReplicasAux += maxPathsDefault;
     }
 
     private void readSeeds() {
@@ -169,20 +196,12 @@ public class Parameters {
         return seeds.get(seedCounter);
     }
 
-    public String getNetworkFile() {
-        return networkFile;
+    public String getScenario() {
+        return scenario;
     }
 
-    public void setNetworkFile(String networkFile) {
-        this.networkFile = networkFile;
-    }
-
-    public String getPathsFile() {
-        return pathsFile;
-    }
-
-    public void setPathsFile(String pathsFile) {
-        this.pathsFile = pathsFile;
+    public void setScenario(String scenario) {
+        this.scenario = scenario;
     }
 
     public double getGap() {
@@ -201,36 +220,44 @@ public class Parameters {
         this.weights = weights;
     }
 
-    public double getServerCapacity() {
-        return serverCapacity;
+    public double getServerCapacityDefault() {
+        return serverCapacityDefault;
     }
 
-    public void setServerCapacity(int serverCapacity) {
-        this.serverCapacity = serverCapacity;
+    public void setServerCapacityDefault(int serverCapacityDefault) {
+        this.serverCapacityDefault = serverCapacityDefault;
     }
 
-    public int getServersPerNode() {
-        return serversPerNode;
+    public int getServersNodeDefault() {
+        return serversNodeDefault;
     }
 
-    public void setServersPerNode(int serversPerNode) {
-        this.serversPerNode = serversPerNode;
+    public void setServersNodeDefault(int serversNodeDefault) {
+        this.serversNodeDefault = serversNodeDefault;
     }
 
-    public double getLinkCapacity() {
-        return linkCapacity;
+    public double getLinkCapacityDefault() {
+        return linkCapacityDefault;
     }
 
-    public void setLinkCapacity(int linkCapacity) {
-        this.linkCapacity = linkCapacity;
+    public void setLinkCapacityDefault(int linkCapacityDefault) {
+        this.linkCapacityDefault = linkCapacityDefault;
     }
 
-    public int getMaxReplicas() {
-        return maxReplicas;
+    public int getMaxPathsDefault() {
+        return maxPathsDefault;
     }
 
-    public void setMaxReplicas(int maxReplicas) {
-        this.maxReplicas = maxReplicas;
+    public void setMaxPathsDefault(int maxPathsDefault) {
+        this.maxPathsDefault = maxPathsDefault;
+    }
+
+    public int getMinPathsDefault() {
+        return minPathsDefault;
+    }
+
+    public void setMinPathsDefault(int minPathsDefault) {
+        this.minPathsDefault = minPathsDefault;
     }
 
     public List<Service> getServices() {
@@ -241,12 +268,12 @@ public class Parameters {
         this.services = services;
     }
 
-    public void setFunctionTypes(Map<Integer, Function> functionTypes) {
-        this.functionTypes = functionTypes;
+    public void setFunctions(List<Function> functions) {
+        this.functions = functions;
     }
 
-    public void setServiceTypes(Map<Integer, Service> serviceTypes) {
-        this.serviceTypes = serviceTypes;
+    public void setServiceChains(List<Service> serviceChains) {
+        this.serviceChains = serviceChains;
     }
 
     public List<TrafficFlow> getTrafficFlows() {
@@ -261,36 +288,36 @@ public class Parameters {
         this.trafficFlows = trafficFlows;
     }
 
-    public int getMinDemands() {
-        return minDemands;
+    public int getMinDemandsDefault() {
+        return minDemandsDefault;
     }
 
-    public void setMinDemands(int minDemands) {
-        this.minDemands = minDemands;
+    public void setMinDemandsDefault(int minDemandsDefault) {
+        this.minDemandsDefault = minDemandsDefault;
     }
 
-    public int getMaxDemands() {
-        return maxDemands;
+    public int getMaxDemandsDefault() {
+        return maxDemandsDefault;
     }
 
-    public void setMaxDemands(int maxDemands) {
-        this.maxDemands = maxDemands;
+    public void setMaxDemandsDefault(int maxDemandsDefault) {
+        this.maxDemandsDefault = maxDemandsDefault;
     }
 
-    public double getMinBw() {
-        return minBw;
+    public double getMinBwDefault() {
+        return minBwDefault;
     }
 
-    public void setMinBw(int minBw) {
-        this.minBw = minBw;
+    public void setMinBwDefault(int minBwDefault) {
+        this.minBwDefault = minBwDefault;
     }
 
-    public double getMaxBw() {
-        return maxBw;
+    public double getMaxBwDefault() {
+        return maxBwDefault;
     }
 
-    public void setMaxBw(int maxBw) {
-        this.maxBw = maxBw;
+    public void setMaxBwDefault(int maxBwDefault) {
+        this.maxBwDefault = maxBwDefault;
     }
 
     public List<Server> getServers() {
@@ -329,11 +356,11 @@ public class Parameters {
         return totalNumberOfPossibleReplicasAux;
     }
 
-    public int[] getAuxValues() {
-        return auxValues;
+    public int[] getAux() {
+        return aux;
     }
 
-    public void setAuxValues(int[] auxValues) {
-        this.auxValues = auxValues;
+    public void setAux(int[] aux) {
+        this.aux = aux;
     }
 }

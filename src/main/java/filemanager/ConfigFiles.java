@@ -26,8 +26,9 @@ public class ConfigFiles {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         Parameters parameters = null;
         try {
-            parameters = mapper.readValue(new File(path + filename), Parameters.class);
-
+            parameters = mapper.readValue(new File(path + filename + ".yml"), Parameters.class);
+            filename = filename.replace("/", "");
+            parameters.setScenario(filename);
         } catch (Exception e) {
             e.printStackTrace();
         }
