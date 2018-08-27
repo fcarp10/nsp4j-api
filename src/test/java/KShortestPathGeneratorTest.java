@@ -11,7 +11,7 @@ public class KShortestPathGeneratorTest {
     @Test
     public void inputParameters() throws URISyntaxException {
         String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
-        Parameters parameters = ConfigFiles.readParameters(path, "/test_scenario1");
+        Parameters parameters = ConfigFiles.readParameters(path, "/test_scenario1.yml");
         parameters.initialize(path);
         KShortestPathGenerator kShortestPathGenerator = new KShortestPathGenerator(10, 3);
         kShortestPathGenerator.run();
