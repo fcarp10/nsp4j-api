@@ -178,7 +178,7 @@ public class Parameters {
 
     private void readSeeds() {
         new ConfigFiles();
-        Scanner scanner = ConfigFiles.scanPlainTextFileInResources("/seeds.txt");
+        Scanner scanner = ConfigFiles.scanPlainTextFileInResources("/aux_files/seeds.txt");
         seeds = new ArrayList<>();
 
         while (scanner.hasNextLine()) {
