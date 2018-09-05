@@ -10,7 +10,10 @@ import services.Function;
 import services.Service;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Parameters {
 
@@ -71,7 +74,7 @@ public class Parameters {
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         setLinkCapacity();
-        createServers();
+        generateServers();
         mapPathsToTrafficFlows(path);
         mapTrafficDemandsToTrafficFlows();
         createSetOfServices();
@@ -84,7 +87,7 @@ public class Parameters {
                 link.addAttribute("capacity", linkCapacityDefault);
     }
 
-    private void createServers() {
+    private void generateServers() {
         for (Node node : GraphManager.getGraph().getNodeSet()) {
             int serversNode;
             if (node.getAttribute("serversNode") != null)
@@ -92,10 +95,14 @@ public class Parameters {
             else
                 serversNode = serversNodeDefault;
             for (int s = 0; s < serversNode; s++) {
-                if (node.getAttribute("capacity") != null)
-                    servers.add(new Server(node.getId() + "-" + s, node, node.getAttribute("capacity")));
+                Server server;
+                if (node.getAttribute("capacity") != null && node.getAttribute("reliability") != null)
+                    server = new Server(node.getId() + "-" + s, node, node.getAttribute("capacity"), node.getAttribute("reliability"));
+                else if (node.getAttribute("capacity") != null && node.getAttribute("reliability") == null)
+                    server = new Server(node.getId() + "-" + s, node, node.getAttribute("capacity"));
                 else
-                    servers.add(new Server(node.getId() + "-" + s, node, serverCapacityDefault));
+                    server = new Server(node.getId() + "-" + s, node, serverCapacityDefault);
+                servers.add(server);
             }
         }
     }
