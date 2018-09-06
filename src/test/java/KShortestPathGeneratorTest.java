@@ -1,5 +1,5 @@
 import filemanager.ConfigFiles;
-import filemanager.Parameters;
+import filemanager.GraphManager;
 import org.junit.Test;
 import utils.KShortestPathGenerator;
 
@@ -10,11 +10,11 @@ public class KShortestPathGeneratorTest {
 
     @Test
     public void inputParameters() throws URISyntaxException {
+        String TOPOLOGY = "test_scenario1";
         String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
-        Parameters parameters = ConfigFiles.readParameters(path, "/test_scenario1.yml");
-        parameters.initialize(path);
-        KShortestPathGenerator kShortestPathGenerator = new KShortestPathGenerator(10, 3);
-        kShortestPathGenerator.run();
-//        kShortestPathGenerator.run(GraphManager.getGraph().getNode("n1"),GraphManager.getGraph().getNode("n9"));
+        new GraphManager();
+        GraphManager.importTopology(path, TOPOLOGY);
+        KShortestPathGenerator kShortestPathGenerator = new KShortestPathGenerator(10, 5);
+        kShortestPathGenerator.run(TOPOLOGY);
     }
 }

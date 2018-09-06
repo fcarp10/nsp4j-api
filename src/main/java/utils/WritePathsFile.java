@@ -1,6 +1,7 @@
 package utils;
 
 import filemanager.ConfigFiles;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class WritePathsFile {
             e.printStackTrace();
         }
         path = path.replaceAll("%20", " ");
-        file = new File(path + "/" + fileName);
+        file = new File(path + "/" + fileName + ".txt");
         try {
             filewriter = new FileWriter(file, false);
         } catch (IOException e) {

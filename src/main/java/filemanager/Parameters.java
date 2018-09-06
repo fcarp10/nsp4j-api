@@ -70,7 +70,7 @@ public class Parameters {
     public void initialize(String path) {
         readSeeds();
         new GraphManager();
-        GraphManager.importTopology(path, scenario + ".dgs");
+        GraphManager.importTopology(path, scenario);
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
         setLinkCapacity();

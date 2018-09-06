@@ -23,10 +23,10 @@ public class GraphManager {
 
     public static void importTopology(String path, String filename) {
         graph = new SingleGraph("graph");
-        if(!path.endsWith("/"))
+        if (!path.endsWith("/"))
             path += "/";
         try {
-            graph.read(path + filename);
+            graph.read(path + filename + ".dgs");
         } catch (IOException e) {
             log.error(e.getMessage());
         } catch (GraphParseException e) {
@@ -37,7 +37,7 @@ public class GraphManager {
     public static List<Path> importPaths(String stringPathFile, String filename) {
         List<Path> paths = new ArrayList<>();
         FileInputStream stream = null;
-        if(!stringPathFile.endsWith("/"))
+        if (!stringPathFile.endsWith("/"))
             stringPathFile += "/";
         try {
             stream = new FileInputStream(stringPathFile + filename);
