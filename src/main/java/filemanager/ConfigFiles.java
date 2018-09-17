@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class ConfigFiles {
 
-    public static Scanner scanPlainTextFileInResources(String filename) {
+    static Scanner scanPlainTextFileInResources(String filename) {
         InputStream inputStream = TypeReference.class.getResourceAsStream(filename);
         Scanner scanner = null;
         try {

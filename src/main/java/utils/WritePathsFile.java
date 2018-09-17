@@ -8,19 +8,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 
-public class WritePathsFile {
+class WritePathsFile {
 
     private File file;
     private FileWriter filewriter;
 
-    public WritePathsFile(String fileName) {
+    WritePathsFile(String fileName) {
         String path = null;
         try {
             path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
+            path = path.replaceAll("%20", " ");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        path = path.replaceAll("%20", " ");
         file = new File(path + "/" + fileName + ".txt");
         try {
             filewriter = new FileWriter(file, false);
@@ -29,7 +29,7 @@ public class WritePathsFile {
         }
     }
 
-    public void write(String value) {
+    void write(String value) {
         try {
             filewriter = new FileWriter(file, true);
             PrintWriter printer = new PrintWriter(filewriter);

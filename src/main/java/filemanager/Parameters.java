@@ -73,7 +73,7 @@ public class Parameters {
         GraphManager.importTopology(path, scenario);
         nodes.addAll(GraphManager.getGraph().getNodeSet());
         links.addAll(GraphManager.getGraph().getEdgeSet());
-        setLinkCapacity();
+        setLinkParameters();
         generateServers();
         mapPathsToTrafficFlows(path);
         mapTrafficDemandsToTrafficFlows();
@@ -81,10 +81,19 @@ public class Parameters {
         calculateAuxiliaryValues();
     }
 
-    private void setLinkCapacity() {
-        for (Edge link : links)
+    private void setLinkParameters() {
+        for (Edge link : links) {
             if (link.getAttribute("capacity") == null)
                 link.addAttribute("capacity", linkCapacityDefault);
+            if (link.getAttribute("delay") == null) {
+                int n1X = link.getSourceNode().getAttribute("x");
+                int n1Y = link.getSourceNode().getAttribute("y");
+                int n2X = link.getTargetNode().getAttribute("x");
+                int n2Y = link.getTargetNode().getAttribute("y");
+                double delay = Math.sqrt(Math.pow(n1X - n2X, 2) + Math.pow(n1Y - n2Y, 2)) / 29.9792458;
+                link.addAttribute("delay", delay);
+            }
+        }
     }
 
     private void generateServers() {
@@ -207,7 +216,7 @@ public class Parameters {
         return scenario;
     }
 
-    public void setScenario(String scenario) {
+    void setScenario(String scenario) {
         this.scenario = scenario;
     }
 

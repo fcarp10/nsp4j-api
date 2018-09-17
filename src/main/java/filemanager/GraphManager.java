@@ -34,7 +34,7 @@ public class GraphManager {
         }
     }
 
-    public static List<Path> importPaths(String stringPathFile, String filename) {
+    static List<Path> importPaths(String stringPathFile, String filename) {
         List<Path> paths = new ArrayList<>();
         FileInputStream stream = null;
         if (!stringPathFile.endsWith("/"))
