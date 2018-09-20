@@ -106,11 +106,11 @@ public class Parameters {
             for (int s = 0; s < serversNode; s++) {
                 Server server;
                 if (node.getAttribute("capacity") != null && node.getAttribute("reliability") != null)
-                    server = new Server(node.getId() + "-" + s, node, node.getAttribute("capacity"), node.getAttribute("reliability"));
+                    server = new Server(node.getId() + "_" + s, node, node.getAttribute("capacity"), node.getAttribute("reliability"));
                 else if (node.getAttribute("capacity") != null && node.getAttribute("reliability") == null)
-                    server = new Server(node.getId() + "-" + s, node, node.getAttribute("capacity"));
+                    server = new Server(node.getId() + "_" + s, node, node.getAttribute("capacity"));
                 else
-                    server = new Server(node.getId() + "-" + s, node, serverCapacityDefault);
+                    server = new Server(node.getId() + "_" + s, node, serverCapacityDefault);
                 servers.add(server);
             }
         }
