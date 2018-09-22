@@ -16,21 +16,20 @@ public class KShortestPathGenerator {
     private int maxLength;
     private int numOfKPaths;
 
-    public KShortestPathGenerator(int maxLength, int numOfKPaths) {
+    public KShortestPathGenerator(int maxLength, int numOfKPaths, String path, String fileName) {
+        writePathsFile = new WritePathsFile(path, fileName);
         this.maxLength = maxLength;
         this.numOfKPaths = numOfKPaths;
     }
 
-    public void run(String fileName) {
-        writePathsFile = new WritePathsFile(fileName);
+    public void run() {
         for (Node src : GraphManager.getGraph().getNodeSet())
             for (Node dst : GraphManager.getGraph().getNodeSet())
                 if (!src.equals(dst))
                     findPaths(src, dst);
     }
 
-    public void run(Node src, Node dst, String fileName) {
-        writePathsFile = new WritePathsFile(fileName);
+    public void run(Node src, Node dst) {
         if (!src.equals(dst))
             findPaths(src, dst);
     }
