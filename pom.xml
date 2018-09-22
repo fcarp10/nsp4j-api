@@ -6,7 +6,7 @@
 
     <groupId>de.tubs</groupId>
     <artifactId>nsm4j-api</artifactId>
-    <version>0.2</version>
+    <version>0.2.1</version>
 
     <properties>
         <java.version>1.8</java.version>
