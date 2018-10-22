@@ -124,11 +124,12 @@ public class Parameters {
 
     private void mapTrafficDemandsToTrafficFlows() {
         Random random = new Random();
-        for (TrafficFlow trafficFlow : trafficFlows) {
-            int numOfTrafficDemands = minDemandsDefault + (maxDemandsDefault - minDemandsDefault) * random.nextInt();
-            for (int td = 0; td < numOfTrafficDemands; td++)
-                trafficFlow.setTrafficDemand(random.nextInt(maxBwDefault + 1 - minBwDefault) + minBwDefault);
-        }
+        for (TrafficFlow trafficFlow : trafficFlows)
+            if (!trafficFlow.generateTrafficDemands()) {
+                int numOfTrafficDemands = minDemandsDefault + (maxDemandsDefault - minDemandsDefault) * random.nextInt();
+                for (int td = 0; td < numOfTrafficDemands; td++)
+                    trafficFlow.setTrafficDemand(random.nextInt(maxBwDefault + 1 - minBwDefault) + minBwDefault);
+            }
     }
 
     private void createSetOfServices() {

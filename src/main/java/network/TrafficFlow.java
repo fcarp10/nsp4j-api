@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 
 public class TrafficFlow {
@@ -49,6 +50,16 @@ public class TrafficFlow {
         for (Path path : allPaths)
             if (path.getNodePath().get(0).getId().equals(src) && path.getNodePath().get(path.size() - 1).getId().equals(dst))
                 admissiblePaths.add(path);
+    }
+
+    public boolean generateTrafficDemands() {
+        Random random = new Random();
+        if (maxBw > 0 & minBw > 0) {
+            int numOfTrafficDemands = minDemands + (maxDemands - minDemands) * random.nextInt();
+            for (int td = 0; td < numOfTrafficDemands; td++)
+                trafficDemands.add(random.nextInt(maxBw + 1 - minBw) + minBw);
+            return true;
+        } else return false;
     }
 
     public String getSrc() {

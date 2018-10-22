@@ -38,15 +38,15 @@ trafficFlows:
     serviceId: 0
     minDemands: 3
     maxDemands: 3
-    minBw: 100
-    maxBw: 100
+    minBw: 10
+    maxBw: 10
   - src: "n2"
     dst: "n9"
     serviceId: 0
     minDemands: 3
     maxDemands: 3
-    minBw: 100
-    maxBw: 100
+    minBw: 10
+    maxBw: 10
 
 # Auxiliary values
 aux: [1000, 10]
