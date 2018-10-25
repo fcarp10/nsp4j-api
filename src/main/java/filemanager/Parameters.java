@@ -24,6 +24,7 @@ public class Parameters {
     // Network default parameters
     private int serverCapacityDefault;
     private int serversNodeDefault;
+    private int serverDelayDefault;
     private int linkCapacityDefault;
     private int minPathsDefault;
     private int maxPathsDefault;
@@ -104,13 +105,13 @@ public class Parameters {
             else
                 serversNode = serversNodeDefault;
             for (int s = 0; s < serversNode; s++) {
-                Server server;
-                if (node.getAttribute("capacity") != null && node.getAttribute("reliability") != null)
-                    server = new Server(node.getId() + "_" + s, node, node.getAttribute("capacity"), node.getAttribute("reliability"));
-                else if (node.getAttribute("capacity") != null && node.getAttribute("reliability") == null)
-                    server = new Server(node.getId() + "_" + s, node, node.getAttribute("capacity"));
-                else
-                    server = new Server(node.getId() + "_" + s, node, serverCapacityDefault);
+                Server server = new Server(node.getId() + "_" + s, node, serverCapacityDefault, serverDelayDefault);
+                if(node.getAttribute("capacity") != null)
+                    server.setCapacity(node.getAttribute("capacity"));
+                if(node.getAttribute("delay") != null)
+                    server.setProcessingDelay(node.getAttribute("delay"));
+                if(node.getAttribute("reliability") != null)
+                    server.setReliability(node.getAttribute("reliability"));
                 servers.add(server);
             }
         }
@@ -251,6 +252,14 @@ public class Parameters {
 
     public void setServersNodeDefault(int serversNodeDefault) {
         this.serversNodeDefault = serversNodeDefault;
+    }
+
+    public int getServerDelayDefault() {
+        return serverDelayDefault;
+    }
+
+    public void setServerDelayDefault(int serverDelayDefault) {
+        this.serverDelayDefault = serverDelayDefault;
     }
 
     public double getLinkCapacityDefault() {
