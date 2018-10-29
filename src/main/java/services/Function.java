@@ -6,15 +6,9 @@ public class Function {
     private boolean replicable;
     private double load;
     private int maxShareable;
+    private int delay;
 
     public Function() {
-    }
-
-    public Function(int type, boolean replicable, double load, int maxShareable) {
-        this.type = type;
-        this.replicable = replicable;
-        this.load = load;
-        this.maxShareable = maxShareable;
     }
 
     public int getType() {
@@ -31,5 +25,9 @@ public class Function {
 
     public int getMaxShareable() {
         return maxShareable;
+    }
+
+    public int getDelay() {
+        return delay;
     }
 }

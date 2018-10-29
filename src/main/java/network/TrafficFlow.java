@@ -1,21 +1,14 @@
 package network;
 
-import filemanager.GraphManager;
-import org.graphstream.algorithm.Dijkstra;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 
 public class TrafficFlow {
 
-    private static final Logger log = LoggerFactory.getLogger(TrafficFlow.class);
     private String src;
     private String dst;
     private int serviceId;
@@ -29,21 +22,6 @@ public class TrafficFlow {
     public TrafficFlow() {
         trafficDemands = new ArrayList<>();
         admissiblePaths = new ArrayList<>();
-    }
-
-    public void setShortestPaths() {
-        Dijkstra dijkstra = new Dijkstra();
-        dijkstra.init(GraphManager.getGraph());
-        Node srcNode = GraphManager.getGraph().getNode(src);
-        Node dstNode = GraphManager.getGraph().getNode(dst);
-        if (srcNode != null && dstNode != null) {
-            dijkstra.setSource(srcNode);
-            dijkstra.compute();
-            Iterator<Path> pathIterator = dijkstra.getAllPathsIterator(dstNode);
-            pathIterator.forEachRemaining(admissiblePaths::add);
-        } else {
-            log.error("The source and/or destination node names are wrong");
-        }
     }
 
     public void setPaths(List<Path> allPaths) {
