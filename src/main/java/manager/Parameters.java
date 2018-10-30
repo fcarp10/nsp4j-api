@@ -1,13 +1,15 @@
-package filemanager;
+package manager;
 
-
-import network.Server;
-import network.TrafficFlow;
+import manager.elements.Server;
+import manager.elements.TrafficFlow;
+import utils.ConfigFiles;
+import utils.GraphManager;
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
-import services.Function;
-import services.Service;
+import manager.elements.Function;
+import manager.elements.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ public class Parameters {
     private int[] aux;
 
     // *Local parameters
+    private Graph graph;
     private List<Node> nodes;
     private List<Edge> links;
     private List<Server> servers;
@@ -71,9 +74,9 @@ public class Parameters {
     public void initialize(String path) {
         readSeeds();
         new GraphManager();
-        GraphManager.importTopology(path, scenario);
-        nodes.addAll(GraphManager.getGraph().getNodeSet());
-        links.addAll(GraphManager.getGraph().getEdgeSet());
+        graph = GraphManager.importTopology(path, scenario);
+        nodes.addAll(graph.getNodeSet());
+        links.addAll(graph.getEdgeSet());
         setLinkParameters();
         generateServers();
         mapPathsToTrafficFlows(path);
@@ -98,7 +101,7 @@ public class Parameters {
     }
 
     private void generateServers() {
-        for (Node node : GraphManager.getGraph().getNodeSet()) {
+        for (Node node : graph.getNodeSet()) {
             int serversNode;
             if (node.getAttribute("serversNode") != null)
                 serversNode = node.getAttribute("serversNode");
@@ -118,7 +121,7 @@ public class Parameters {
     }
 
     private void mapPathsToTrafficFlows(String path) {
-        paths = GraphManager.importPaths(path, scenario + ".txt");
+        paths = GraphManager.importPaths(graph, path, scenario + ".txt");
         for (TrafficFlow trafficFlow : trafficFlows)
             trafficFlow.setPaths(paths);
     }
@@ -218,7 +221,7 @@ public class Parameters {
         return scenario;
     }
 
-    void setScenario(String scenario) {
+    public void setScenario(String scenario) {
         this.scenario = scenario;
     }
 

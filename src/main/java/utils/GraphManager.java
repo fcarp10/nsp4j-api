@@ -1,4 +1,4 @@
-package filemanager;
+package utils;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -19,10 +19,9 @@ import java.util.Scanner;
 public class GraphManager {
 
     private static final Logger log = LoggerFactory.getLogger(GraphManager.class);
-    private static Graph graph;
 
-    public static void importTopology(String path, String filename) {
-        graph = new SingleGraph("graph");
+    public static Graph importTopology(String path, String filename) {
+        Graph graph = new SingleGraph("graph");
         if (!path.endsWith("/"))
             path += "/";
         try {
@@ -32,9 +31,10 @@ public class GraphManager {
         } catch (GraphParseException e) {
             e.printStackTrace();
         }
+        return graph;
     }
 
-    static List<Path> importPaths(String stringPathFile, String filename) {
+    public static List<Path> importPaths(Graph graph, String stringPathFile, String filename) {
         List<Path> paths = new ArrayList<>();
         FileInputStream stream = null;
         if (!stringPathFile.endsWith("/"))
@@ -60,9 +60,5 @@ public class GraphManager {
             paths.add(path);
         }
         return paths;
-    }
-
-    public static Graph getGraph() {
-        return graph;
     }
 }

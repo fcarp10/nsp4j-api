@@ -1,8 +1,9 @@
-package filemanager;
+package utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import manager.Parameters;
 
 import java.io.File;
 import java.io.InputStream;
@@ -10,7 +11,7 @@ import java.util.Scanner;
 
 public class ConfigFiles {
 
-    static Scanner scanPlainTextFileInResources(String filename) {
+    public static Scanner scanPlainTextFileInResources(String filename) {
         InputStream inputStream = TypeReference.class.getResourceAsStream(filename);
         Scanner scanner = null;
         try {

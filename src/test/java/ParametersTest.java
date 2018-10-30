@@ -1,5 +1,5 @@
-import filemanager.ConfigFiles;
-import filemanager.Parameters;
+import utils.ConfigFiles;
+import manager.Parameters;
 import org.junit.Test;
 
 import java.io.File;

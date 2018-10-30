@@ -1,7 +1,7 @@
 package utils;
 
-import filemanager.GraphManager;
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 import org.slf4j.Logger;
@@ -15,16 +15,18 @@ public class KShortestPathGenerator {
     private WritePathsFile writePathsFile;
     private int maxLength;
     private int numOfKPaths;
+    private Graph graph;
 
-    public KShortestPathGenerator(int maxLength, int numOfKPaths, String path, String fileName) {
+    public KShortestPathGenerator(Graph graph, int maxLength, int numOfKPaths, String path, String fileName) {
         writePathsFile = new WritePathsFile(path, fileName);
         this.maxLength = maxLength;
         this.numOfKPaths = numOfKPaths;
+        this.graph = graph;
     }
 
     public void run() {
-        for (Node src : GraphManager.getGraph().getNodeSet())
-            for (Node dst : GraphManager.getGraph().getNodeSet())
+        for (Node src : graph.getNodeSet())
+            for (Node dst : graph.getNodeSet())
                 if (!src.equals(dst))
                     findPaths(src, dst);
     }
@@ -64,7 +66,7 @@ public class KShortestPathGenerator {
             onPath.add(srcNode);
 
             if (!srcNode.equals(dstNode)) {
-                for (Iterator<Node> it = GraphManager.getGraph().getNode(srcNode).getNeighborNodeIterator(); it.hasNext(); ) {
+                for (Iterator<Node> it = graph.getNode(srcNode).getNeighborNodeIterator(); it.hasNext(); ) {
                     Node currentNode = it.next();
                     String currentNodeString = currentNode.getId();
                     if (!onPath.contains(currentNodeString))
@@ -82,7 +84,7 @@ public class KShortestPathGenerator {
             ArrayList<Node> nodes = new ArrayList<>();
             ArrayList<Edge> edges = new ArrayList<>();
             for (int i = 0; i < pathNodes.size() - 1; i++) {
-                Node node = GraphManager.getGraph().getNode(pathNodes.get(i));
+                Node node = graph.getNode(pathNodes.get(i));
                 nodes.add(node);
                 for (Edge edge : node.getEachEdge()) {
                     if (edge.getOpposite(node).getId().equals(pathNodes.get(i + 1))) {

@@ -1,4 +1,4 @@
-package network;
+package manager.elements;
 
 import org.graphstream.graph.Node;
 
