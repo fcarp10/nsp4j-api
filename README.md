@@ -2,7 +2,7 @@
 
 #### Network and Service management Planning framework for Java - API
 
-The framework requires three different input files: one describing the network topology, one with all paths listed and one for the NFV specific parameters. All three files must have exactly the same name with different extensions:\*.dgs for the topology, \*.txt for the paths and \*.yml for the parameters.
+The framework requires three different input files: one describing the network topology, one with all paths listed and one for the specific parameters. All three files must have exactly the same name with different extensions:\*.dgs for the topology, \*.txt for the paths and \*.yml for the parameters.
 
 ### Topology file
 
@@ -51,7 +51,7 @@ The desired network topology is described using the GraphStream guidelines in a 
 
 ``ae`` adds an link. This command must be followed by a unique identifier of the link, following with the identifiers of two connecting nodes. For each link, the specific capacity can be specified (i.e. capacity)/
 
-For further information, see `<http://graphstream-project.org/doc/Advanced-Concepts/The-DGS-File-Format/>`_
+For further information, see [Graphstream](http://graphstream-project.org/doc/Advanced-Concepts/The-DGS-File-Format/) documentation.
 
 
 ### Paths file
@@ -129,3 +129,5 @@ This file describes the default parameters for the optimization model. The name 
 
     # Auxiliary values (overhead, training iterations)
     aux: [100, 1000]
+
+Description of the parameters (TBA).
