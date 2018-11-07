@@ -4,8 +4,7 @@
 
 The framework requires three different input files: one describing the network topology, one with all paths listed and one for the NFV specific parameters. All three files must have exactly the same name with different extensions:\*.dgs for the topology, \*.txt for the paths and \*.yml for the parameters.
 
-Topology file
-=============
+### Topology file
 
 The desired network topology is described using the GraphStream guidelines in a file with extension \*.dgs. For instance:
 
@@ -55,8 +54,7 @@ The desired network topology is described using the GraphStream guidelines in a 
 For further information, see `<http://graphstream-project.org/doc/Advanced-Concepts/The-DGS-File-Format/>`_
 
 
-Paths file
-==========
+### Paths file
 
 The admissible paths for the topology must be specified in a file with the same name as the topology file, but with extension \*.txt. For instance:
 
@@ -68,8 +66,7 @@ The admissible paths for the topology must be specified in a file with the same 
 
 This paths can be externally generated or generated using the included KShortest Path Generator tool.
 
-Parameters file
-===============
+### Parameters file
 
 This file describes the default parameters for the optimization model. The name of the file has to be the same as the name of the topology file, but with extension \*.yml. An example of a parameter file is:
 
