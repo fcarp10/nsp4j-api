@@ -1,7 +1,9 @@
 package manager.elements;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Service {
 
@@ -9,63 +11,40 @@ public class Service {
     private int[] chain;
     private transient List<Function> functions;
     private TrafficFlow trafficFlow;
-    private int minPaths;
-    private int maxPaths;
+    private Map<String, Object> attributes;
 
     public Service() {
+        attributes = new HashMap<>();
     }
 
     public Service(int id, List<Function> functions, TrafficFlow trafficFlow) {
+        attributes = new HashMap<>();
         this.id = id;
         this.functions = functions;
         this.trafficFlow = trafficFlow;
+    }
+
+    public Object getAttribute(String key) {
+        return attributes.get(key);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int[] getChain() {
         return chain;
-    }
-
-    public void setChain(int[] chain) {
-        this.chain = chain;
     }
 
     public List<Function> getFunctions() {
         return functions;
     }
 
-    public void setFunctions(List<Function> functions) {
-        this.functions = functions;
-    }
-
     public TrafficFlow getTrafficFlow() {
         return trafficFlow;
-    }
-
-    public void setTrafficFlow(TrafficFlow trafficFlow) {
-        this.trafficFlow = trafficFlow;
-    }
-
-    public int getMinPaths() {
-        return minPaths;
-    }
-
-    public void setMinPaths(int minPaths) {
-        this.minPaths = minPaths;
-    }
-
-    public int getMaxPaths() {
-        return maxPaths;
-    }
-
-    public void setMaxPaths(int maxPaths) {
-        this.maxPaths = maxPaths;
     }
 }

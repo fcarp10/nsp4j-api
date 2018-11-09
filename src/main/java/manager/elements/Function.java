@@ -1,33 +1,26 @@
 package manager.elements;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Function {
 
     private int type;
-    private boolean replicable;
-    private double load;
-    private int maxShareable;
-    private int delay;
+    private Map<String, Object> attributes;
 
     public Function() {
+        attributes = new HashMap<>();
+    }
+
+    public Object getAttribute(String key) {
+        return attributes.get(key);
     }
 
     public int getType() {
         return type;
     }
 
-    public boolean isReplicable() {
-        return replicable;
-    }
-
-    public double getLoad() {
-        return load;
-    }
-
-    public int getMaxShareable() {
-        return maxShareable;
-    }
-
-    public int getDelay() {
-        return delay;
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }

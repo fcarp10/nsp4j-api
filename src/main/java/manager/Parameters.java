@@ -12,10 +12,7 @@ import manager.elements.Function;
 import manager.elements.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Parameters {
 
@@ -41,7 +38,7 @@ public class Parameters {
     private List<TrafficFlow> trafficFlows;
 
     // Auxiliary
-    private int[] aux;
+    private Map aux;
 
     // *Local parameters
     private Graph graph;
@@ -69,6 +66,7 @@ public class Parameters {
         trafficFlows = new ArrayList<>();
         functions = new ArrayList<>();
         serviceChains = new ArrayList<>();
+        aux = new HashMap();
     }
 
     public void initialize(String path) {
@@ -109,11 +107,11 @@ public class Parameters {
                 serversNode = serversNodeDefault;
             for (int s = 0; s < serversNode; s++) {
                 Server server = new Server(node.getId() + "_" + s, node, serverCapacityDefault, serverDelayDefault);
-                if(node.getAttribute("capacity") != null)
+                if (node.getAttribute("capacity") != null)
                     server.setCapacity(node.getAttribute("capacity"));
-                if(node.getAttribute("delay") != null)
+                if (node.getAttribute("delay") != null)
                     server.setProcessingDelay(node.getAttribute("delay"));
-                if(node.getAttribute("reliability") != null)
+                if (node.getAttribute("reliability") != null)
                     server.setReliability(node.getAttribute("reliability"));
                 servers.add(server);
             }
@@ -193,7 +191,7 @@ public class Parameters {
         totalNumberOfPossibleReplicasAux = 0;
         for (Service service : services)
             for (Function f : service.getFunctions())
-                if (f.isReplicable())
+                if ((boolean) f.getAttribute("replicable"))
                     totalNumberOfPossibleReplicasAux += maxPathsDefault;
     }
 
@@ -215,6 +213,10 @@ public class Parameters {
     public Long getSeed() {
         seedCounter++;
         return seeds.get(seedCounter);
+    }
+
+    public Object getAux(String key) {
+        return aux.get(key);
     }
 
     public String getScenario() {
@@ -385,11 +387,7 @@ public class Parameters {
         return totalNumberOfPossibleReplicasAux;
     }
 
-    public int[] getAux() {
+    public Map getAux() {
         return aux;
-    }
-
-    public void setAux(int[] aux) {
-        this.aux = aux;
     }
 }
