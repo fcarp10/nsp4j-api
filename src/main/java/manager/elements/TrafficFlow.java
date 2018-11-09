@@ -24,6 +24,14 @@ public class TrafficFlow {
         admissiblePaths = new ArrayList<>();
     }
 
+    public TrafficFlow(String src, String dst, int serviceId) {
+        trafficDemands = new ArrayList<>();
+        admissiblePaths = new ArrayList<>();
+        this.src = src;
+        this.dst = dst;
+        this.serviceId = serviceId;
+    }
+
     public void setPaths(List<Path> allPaths) {
         for (Path path : allPaths)
             if (path.getNodePath().get(0).getId().equals(src) && path.getNodePath().get(path.size() - 1).getId().equals(dst))

@@ -41,21 +41,6 @@ functions:
         "load": 1.0,
         "delay": 10
     }
-trafficFlows:
-  - src: "n1"
-    dst: "n9"
-    serviceId: 0
-    minDemands: 3
-    maxDemands: 3
-    minBw: 10
-    maxBw: 10
-  - src: "n2"
-    dst: "n9"
-    serviceId: 0
-    minDemands: 3
-    maxDemands: 3
-    minBw: 10
-    maxBw: 10
 
 # Auxiliary values
 aux: {

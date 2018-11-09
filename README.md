@@ -75,59 +75,67 @@ This file describes the default parameters for the optimization model. The name 
 
     # Optimization parameters
     gap: 0
-    weights: [0, 0, 1.0]
-
+    weights: [0.5, 0.5]
+    
     # Network default parameters
     serverCapacityDefault: 1000
     serversNodeDefault: 1
-    serverDelayDefault: 10
     linkCapacityDefault: 1000
     minPathsDefault: 3
     maxPathsDefault: 3
-    minDemandsDefault: 2
-    maxDemandsDefault: 2
+    minDemandsDefault: 3
+    maxDemandsDefault: 3
     minBwDefault: 100
     maxBwDefault: 100
-
-    # Service parameters
+    
+    # service parameters
     serviceChains:
       - id: 0
         chain: [0, 1, 2]
-        minPaths: 3
-        maxPaths: 3
+        attributes: {
+          "minPaths": 1,
+          "maxPaths": 2
+        }
+    
     functions:
       - type: 0
-        replicable: false
-        load: 1.0
-        maxShareable: 5
-        delay: 10
+        attributes: {
+            "replicable": false,
+            "load": 1.0,
+            "delay": 10
+        }
       - type: 1
-        replicable: true
-        load: 1.0
-        maxShareable: 5
-        delay: 10
+        attributes: {
+            "replicable": true,
+            "load": 1.0,
+            "delay": 10
+        }
       - type: 2
-        replicable: false
-        load: 1.0
-        maxShareable: 5
-        delay: 10
+        attributes: {
+            "replicable": false,
+            "load": 1.0,
+            "delay": 10
+        }
     trafficFlows:
       - src: "n1"
         dst: "n9"
         serviceId: 0
         minDemands: 3
         maxDemands: 3
-        minBw: 100
-        maxBw: 100
+        minBw: 10
+        maxBw: 10
       - src: "n2"
         dst: "n9"
         serviceId: 0
         minDemands: 3
         maxDemands: 3
-        minBw: 100
-        maxBw: 100
-
-    # Auxiliary values (overhead, training iterations)
-    aux: [100, 1000]
+        minBw: 10
+        maxBw: 10
+    
+    # Auxiliary values
+    aux: {
+        "overhead": 100,
+        "iterations": 1000
+    }
 
 Description of the parameters (TBA).

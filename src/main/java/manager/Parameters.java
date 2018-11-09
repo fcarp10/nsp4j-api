@@ -77,6 +77,7 @@ public class Parameters {
         links.addAll(graph.getEdgeSet());
         setLinkParameters();
         generateServers();
+        generateTrafficFlows();
         mapPathsToTrafficFlows(path);
         mapTrafficDemandsToTrafficFlows();
         createSetOfServices();
@@ -115,6 +116,18 @@ public class Parameters {
                     server.setReliability(node.getAttribute("reliability"));
                 servers.add(server);
             }
+        }
+    }
+
+    private void generateTrafficFlows() {
+        Random random = new Random();
+        if (trafficFlows.size() == 0) {
+            for (Node srcNode : nodes)
+                for (Node dstNode : nodes) {
+                    if (srcNode == dstNode) continue;
+                    trafficFlows.add(new TrafficFlow(srcNode.getId(), dstNode.getId()
+                            , serviceChains.get(random.nextInt(serviceChains.size())).getId()));
+                }
         }
     }
 
