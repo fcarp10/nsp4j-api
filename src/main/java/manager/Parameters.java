@@ -16,31 +16,19 @@ import java.util.*;
 
 public class Parameters {
 
-    // Optimization parameters
+    // optimization parameters
     private double gap;
     private double[] weights;
-
-    // Network default parameters
-    private int serverCapacityDefault;
-    private int serversNodeDefault;
-    private int serverDelayDefault;
-    private int linkCapacityDefault;
-    private int minPathsDefault;
-    private int maxPathsDefault;
-    private int minDemandsDefault;
-    private int maxDemandsDefault;
-    private int minBwDefault;
-    private int maxBwDefault;
-
-    // NFV parameters
+    // auxiliary parameters
+    private Map aux;
+    // service definitions
     private List<Service> serviceChains;
+    // function definitions
     private List<Function> functions;
+    // traffic flow definitions
     private List<TrafficFlow> trafficFlows;
 
-    // Auxiliary
-    private Map aux;
-
-    // *Local parameters
+    // local parameters
     private Graph graph;
     private List<Node> nodes;
     private List<Edge> links;
@@ -56,6 +44,12 @@ public class Parameters {
     private List<Long> seeds;
     private int seedCounter;
     private String scenario;
+
+    private final String CAPACITY = "capacity";
+    private final String NUM_SERVERS = "num_servers";
+    private final String SERVER_CAPACITY = "server_capacity";
+    private final String DELAY = "delay";
+    private final String PROCESSING_DELAY = "processing_delay";
 
     public Parameters() {
         nodes = new ArrayList<>();
@@ -77,74 +71,64 @@ public class Parameters {
         links.addAll(graph.getEdgeSet());
         setLinkParameters();
         generateServers();
-        generateTrafficFlows();
-        mapPathsToTrafficFlows(path);
-        mapTrafficDemandsToTrafficFlows();
+        generateTrafficFlows(path);
         createSetOfServices();
         calculateAuxiliaryValues();
     }
 
     private void setLinkParameters() {
         for (Edge link : links) {
-            if (link.getAttribute("capacity") == null)
-                link.addAttribute("capacity", linkCapacityDefault);
-            if (link.getAttribute("delay") == null) {
+            if (link.getAttribute(CAPACITY) == null)
+                link.addAttribute(CAPACITY, (int) links.get(0).getAttribute(CAPACITY));
+            if (link.getAttribute(DELAY) == null) {
                 int n1X = link.getSourceNode().getAttribute("x");
                 int n1Y = link.getSourceNode().getAttribute("y");
                 int n2X = link.getTargetNode().getAttribute("x");
                 int n2Y = link.getTargetNode().getAttribute("y");
                 double delay = Math.sqrt(Math.pow(n1X - n2X, 2) + Math.pow(n1Y - n2Y, 2)) / 29.9792458;
-                link.addAttribute("delay", delay);
+                link.addAttribute(DELAY, delay);
             }
         }
     }
 
     private void generateServers() {
-        for (Node node : graph.getNodeSet()) {
-            int serversNode;
-            if (node.getAttribute("serversNode") != null)
-                serversNode = node.getAttribute("serversNode");
-            else
-                serversNode = serversNodeDefault;
-            for (int s = 0; s < serversNode; s++) {
-                Server server = new Server(node.getId() + "_" + s, node, serverCapacityDefault, serverDelayDefault);
-                if (node.getAttribute("capacity") != null)
-                    server.setCapacity(node.getAttribute("capacity"));
-                if (node.getAttribute("delay") != null)
-                    server.setProcessingDelay(node.getAttribute("delay"));
-                if (node.getAttribute("reliability") != null)
-                    server.setReliability(node.getAttribute("reliability"));
+        for (Node node : nodes) {
+            if (node.getAttribute(NUM_SERVERS) == null)
+                node.addAttribute(NUM_SERVERS, (int) nodes.get(0).getAttribute(NUM_SERVERS));
+            for (int s = 0; s < (int) node.getAttribute(NUM_SERVERS); s++) {
+                if (node.getAttribute(SERVER_CAPACITY) == null)
+                    node.addAttribute(SERVER_CAPACITY, (int) nodes.get(0).getAttribute(SERVER_CAPACITY));
+                if (node.getAttribute(PROCESSING_DELAY) == null)
+                    node.addAttribute(PROCESSING_DELAY, (int) nodes.get(0).getAttribute(PROCESSING_DELAY));
+                Server server = new Server(node.getId() + "_" + s, node, node.getAttribute(SERVER_CAPACITY), node.getAttribute(PROCESSING_DELAY));
                 servers.add(server);
             }
         }
     }
 
-    private void generateTrafficFlows() {
+    private void generateTrafficFlows(String path) {
+        paths = GraphManager.importPaths(graph, path, scenario + ".txt");
         Random random = new Random();
-        if (trafficFlows.size() == 0) {
+        if (trafficFlows.get(0).getSrc() == null && trafficFlows.get(0).getDst() == null) {
             for (Node srcNode : nodes)
                 for (Node dstNode : nodes) {
                     if (srcNode == dstNode) continue;
-                    trafficFlows.add(new TrafficFlow(srcNode.getId(), dstNode.getId()
-                            , serviceChains.get(random.nextInt(serviceChains.size())).getId()));
+                    TrafficFlow trafficFlow = new TrafficFlow(srcNode.getId(), dstNode.getId(), serviceChains.get(random.nextInt(serviceChains.size())).getId());
+                    int numOfTrafficDemands = trafficFlows.get(0).getMinDemands()
+                            + (trafficFlows.get(0).getMaxDemands() - trafficFlows.get(0).getMinDemands()) * random.nextInt();
+                    for (int td = 0; td < numOfTrafficDemands; td++)
+                        trafficFlow.setTrafficDemand(random.nextInt(trafficFlows.get(0).getMaxBw()
+                                + 1 - trafficFlows.get(0).getMinBw()) + trafficFlows.get(0).getMinBw());
+                    trafficFlow.setPaths(paths);
+                    trafficFlows.add(trafficFlow);
                 }
-        }
-    }
-
-    private void mapPathsToTrafficFlows(String path) {
-        paths = GraphManager.importPaths(graph, path, scenario + ".txt");
-        for (TrafficFlow trafficFlow : trafficFlows)
-            trafficFlow.setPaths(paths);
-    }
-
-    private void mapTrafficDemandsToTrafficFlows() {
-        Random random = new Random();
-        for (TrafficFlow trafficFlow : trafficFlows)
-            if (!trafficFlow.generateTrafficDemands()) {
-                int numOfTrafficDemands = minDemandsDefault + (maxDemandsDefault - minDemandsDefault) * random.nextInt();
-                for (int td = 0; td < numOfTrafficDemands; td++)
-                    trafficFlow.setTrafficDemand(random.nextInt(maxBwDefault + 1 - minBwDefault) + minBwDefault);
+            trafficFlows.remove(0);
+        } else {
+            for (TrafficFlow trafficFlow : trafficFlows) {
+                trafficFlow.generateTrafficDemands();
+                trafficFlow.setPaths(paths);
             }
+        }
     }
 
     private void createSetOfServices() {
@@ -205,7 +189,7 @@ public class Parameters {
         for (Service service : services)
             for (Function f : service.getFunctions())
                 if ((boolean) f.getAttribute("replicable"))
-                    totalNumberOfPossibleReplicasAux += maxPathsDefault;
+                    totalNumberOfPossibleReplicasAux += (int) aux.get("maxPathsDefault");
     }
 
     private void readSeeds() {
@@ -256,54 +240,6 @@ public class Parameters {
         this.weights = weights;
     }
 
-    public double getServerCapacityDefault() {
-        return serverCapacityDefault;
-    }
-
-    public void setServerCapacityDefault(int serverCapacityDefault) {
-        this.serverCapacityDefault = serverCapacityDefault;
-    }
-
-    public int getServersNodeDefault() {
-        return serversNodeDefault;
-    }
-
-    public void setServersNodeDefault(int serversNodeDefault) {
-        this.serversNodeDefault = serversNodeDefault;
-    }
-
-    public int getServerDelayDefault() {
-        return serverDelayDefault;
-    }
-
-    public void setServerDelayDefault(int serverDelayDefault) {
-        this.serverDelayDefault = serverDelayDefault;
-    }
-
-    public double getLinkCapacityDefault() {
-        return linkCapacityDefault;
-    }
-
-    public void setLinkCapacityDefault(int linkCapacityDefault) {
-        this.linkCapacityDefault = linkCapacityDefault;
-    }
-
-    public int getMaxPathsDefault() {
-        return maxPathsDefault;
-    }
-
-    public void setMaxPathsDefault(int maxPathsDefault) {
-        this.maxPathsDefault = maxPathsDefault;
-    }
-
-    public int getMinPathsDefault() {
-        return minPathsDefault;
-    }
-
-    public void setMinPathsDefault(int minPathsDefault) {
-        this.minPathsDefault = minPathsDefault;
-    }
-
     public List<Service> getServices() {
         return services;
     }
@@ -330,38 +266,6 @@ public class Parameters {
 
     public void setTrafficFlows(List<TrafficFlow> trafficFlows) {
         this.trafficFlows = trafficFlows;
-    }
-
-    public int getMinDemandsDefault() {
-        return minDemandsDefault;
-    }
-
-    public void setMinDemandsDefault(int minDemandsDefault) {
-        this.minDemandsDefault = minDemandsDefault;
-    }
-
-    public int getMaxDemandsDefault() {
-        return maxDemandsDefault;
-    }
-
-    public void setMaxDemandsDefault(int maxDemandsDefault) {
-        this.maxDemandsDefault = maxDemandsDefault;
-    }
-
-    public double getMinBwDefault() {
-        return minBwDefault;
-    }
-
-    public void setMinBwDefault(int minBwDefault) {
-        this.minBwDefault = minBwDefault;
-    }
-
-    public double getMaxBwDefault() {
-        return maxBwDefault;
-    }
-
-    public void setMaxBwDefault(int maxBwDefault) {
-        this.maxBwDefault = maxBwDefault;
     }
 
     public List<Server> getServers() {

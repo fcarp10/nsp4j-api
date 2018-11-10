@@ -40,7 +40,7 @@ public class TrafficFlow {
 
     public boolean generateTrafficDemands() {
         Random random = new Random();
-        if (maxBw > 0 & minBw > 0) {
+        if (maxBw > 0 & minBw > 0 & src != null & dst != null) {
             int numOfTrafficDemands = minDemands + (maxDemands - minDemands) * random.nextInt();
             for (int td = 0; td < numOfTrafficDemands; td++)
                 trafficDemands.add(random.nextInt(maxBw + 1 - minBw) + minBw);
