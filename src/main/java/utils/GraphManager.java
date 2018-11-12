@@ -30,6 +30,7 @@ public class GraphManager {
             log.error(e.getMessage());
         } catch (GraphParseException e) {
             e.printStackTrace();
+            log.error("reading the .dgs topology file");
         }
         return graph;
     }
@@ -43,21 +44,26 @@ public class GraphManager {
             stream = new FileInputStream(stringPathFile + filename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            log.error("reading the .txt path file");
         }
-        Scanner input = new Scanner(stream);
-        while (input.hasNext()) {
-            String stringPath = input.nextLine();
-            String[] pathNodes = stringPath.replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",");
-            Path path = new Path();
-            for (int i = 0; i < pathNodes.length - 1; i++) {
-                Node node = graph.getNode(pathNodes[i]);
-                for (Edge edge : node.getEachEdge())
-                    if (edge.getTargetNode().getId().equals(pathNodes[i + 1])) {
-                        path.push(node, edge);
-                        break;
-                    }
+        try {
+            Scanner input = new Scanner(stream);
+            while (input.hasNext()) {
+                String stringPath = input.nextLine();
+                String[] pathNodes = stringPath.replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",");
+                Path path = new Path();
+                for (int i = 0; i < pathNodes.length - 1; i++) {
+                    Node node = graph.getNode(pathNodes[i]);
+                    for (Edge edge : node.getEachEdge())
+                        if (edge.getTargetNode().getId().equals(pathNodes[i + 1])) {
+                            path.push(node, edge);
+                            break;
+                        }
+                }
+                paths.add(path);
             }
-            paths.add(path);
+        } catch (Exception e){
+            log.error("formatting error in .txt path file");
         }
         return paths;
     }

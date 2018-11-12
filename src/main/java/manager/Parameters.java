@@ -2,6 +2,8 @@ package manager;
 
 import manager.elements.Server;
 import manager.elements.TrafficFlow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.ConfigFiles;
 import utils.GraphManager;
 import org.graphstream.graph.Edge;
@@ -51,6 +53,8 @@ public class Parameters {
     private final String DELAY = "delay";
     private final String PROCESSING_DELAY = "processing_delay";
 
+    private static final Logger log = LoggerFactory.getLogger(Parameters.class);
+
     public Parameters() {
         nodes = new ArrayList<>();
         links = new ArrayList<>();
@@ -67,13 +71,18 @@ public class Parameters {
         readSeeds();
         new GraphManager();
         graph = GraphManager.importTopology(path, scenario);
-        nodes.addAll(graph.getNodeSet());
-        links.addAll(graph.getEdgeSet());
-        setLinkParameters();
-        generateServers();
-        generateTrafficFlows(path);
-        createSetOfServices();
-        calculateAuxiliaryValues();
+        try{
+            nodes.addAll(graph.getNodeSet());
+            links.addAll(graph.getEdgeSet());
+            setLinkParameters();
+            generateServers();
+            generateTrafficFlows(path);
+            createSetOfServices();
+            calculateAuxiliaryValues();
+        } catch (Exception e){
+            log.error("while generating network parameters");
+        }
+
     }
 
     private void setLinkParameters() {
@@ -114,8 +123,7 @@ public class Parameters {
                 for (Node dstNode : nodes) {
                     if (srcNode == dstNode) continue;
                     TrafficFlow trafficFlow = new TrafficFlow(srcNode.getId(), dstNode.getId(), serviceChains.get(random.nextInt(serviceChains.size())).getId());
-                    int numOfTrafficDemands = trafficFlows.get(0).getMinDemands()
-                            + (trafficFlows.get(0).getMaxDemands() - trafficFlows.get(0).getMinDemands()) * random.nextInt();
+                    int numOfTrafficDemands = random.nextInt(trafficFlows.get(0).getMaxDemands() + 1 - trafficFlows.get(0).getMinDemands()) + trafficFlows.get(0).getMinDemands();
                     for (int td = 0; td < numOfTrafficDemands; td++)
                         trafficFlow.setTrafficDemand(random.nextInt(trafficFlows.get(0).getMaxBw()
                                 + 1 - trafficFlows.get(0).getMinBw()) + trafficFlows.get(0).getMinBw());

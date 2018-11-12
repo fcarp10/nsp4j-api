@@ -41,6 +41,8 @@ functions:
 # traffic flow definitions
 trafficFlows:
 - serviceId: 0
+  src: "n1"
+  dst: "n9"
   minDemands: 1
   maxDemands: 1
   minBw: 100
