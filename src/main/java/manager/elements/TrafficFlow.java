@@ -9,114 +9,114 @@ import java.util.Random;
 
 public class TrafficFlow {
 
-    private String src;
-    private String dst;
-    private int serviceId;
-    private List<Integer> trafficDemands;
-    private List<Path> admissiblePaths;
-    private int minDemands;
-    private int maxDemands;
-    private int minBw;
-    private int maxBw;
+   private String src;
+   private String dst;
+   private int serviceId;
+   private List<Integer> demands;
+   private List<Path> paths;
+   private int minDem;
+   private int maxDem;
+   private int minBw;
+   private int maxBw;
 
-    public TrafficFlow() {
-        trafficDemands = new ArrayList<>();
-        admissiblePaths = new ArrayList<>();
-    }
+   public TrafficFlow() {
+      demands = new ArrayList<>();
+      paths = new ArrayList<>();
+   }
 
-    public TrafficFlow(String src, String dst, int serviceId) {
-        trafficDemands = new ArrayList<>();
-        admissiblePaths = new ArrayList<>();
-        this.src = src;
-        this.dst = dst;
-        this.serviceId = serviceId;
-    }
+   public TrafficFlow(String src, String dst, int serviceId) {
+      demands = new ArrayList<>();
+      paths = new ArrayList<>();
+      this.src = src;
+      this.dst = dst;
+      this.serviceId = serviceId;
+   }
 
-    public void setPaths(List<Path> allPaths) {
-        for (Path path : allPaths)
-            if (path.getNodePath().get(0).getId().equals(src) && path.getNodePath().get(path.size() - 1).getId().equals(dst))
-                admissiblePaths.add(path);
-    }
+   public void setPaths(List<Path> allPaths) {
+      for (Path p : allPaths)
+         if (p.getNodePath().get(0).getId().equals(src) && p.getNodePath().get(p.size() - 1).getId().equals(dst))
+            paths.add(p);
+   }
 
-    public boolean generateTrafficDemands() {
-        Random random = new Random();
-        if (maxBw > 0 & minBw > 0 & src != null & dst != null) {
-            int numOfTrafficDemands = random.nextInt(maxDemands + 1 - minDemands) + minDemands;
-            for (int td = 0; td < numOfTrafficDemands; td++)
-                trafficDemands.add(random.nextInt(maxBw + 1 - minBw) + minBw);
-            return true;
-        } else return false;
-    }
+   public boolean generateTrafficDemands() {
+      Random random = new Random();
+      if (maxBw > 0 & minBw > 0 & src != null & dst != null) {
+         int numOfTrafficDemands = random.nextInt(maxDem + 1 - minDem) + minDem;
+         for (int td = 0; td < numOfTrafficDemands; td++)
+            demands.add(random.nextInt(maxBw + 1 - minBw) + minBw);
+         return true;
+      } else return false;
+   }
 
-    public String getSrc() {
-        return src;
-    }
+   public String getSrc() {
+      return src;
+   }
 
-    public void setSrc(String src) {
-        this.src = src;
-    }
+   public void setSrc(String src) {
+      this.src = src;
+   }
 
-    public String getDst() {
-        return dst;
-    }
+   public String getDst() {
+      return dst;
+   }
 
-    public void setDst(String dst) {
-        this.dst = dst;
-    }
+   public void setDst(String dst) {
+      this.dst = dst;
+   }
 
-    public int getServiceId() {
-        return serviceId;
-    }
+   public int getServiceId() {
+      return serviceId;
+   }
 
-    public void setServiceId(int serviceId) {
-        this.serviceId = serviceId;
-    }
+   public void setServiceId(int serviceId) {
+      this.serviceId = serviceId;
+   }
 
-    public List<Integer> getTrafficDemands() {
-        return trafficDemands;
-    }
+   public List<Integer> getDemands() {
+      return demands;
+   }
 
-    public List<Path> getAdmissiblePaths() {
-        return admissiblePaths;
-    }
+   public List<Path> getPaths() {
+      return paths;
+   }
 
-    public void setAdmissiblePath(Path admissiblePath) {
-        this.admissiblePaths.add(admissiblePath);
-    }
+   public void setAdmissiblePath(Path admissiblePath) {
+      this.paths.add(admissiblePath);
+   }
 
-    public void setTrafficDemand(Integer trafficDemand) {
-        trafficDemands.add(trafficDemand);
-    }
+   public void setTrafficDemand(Integer trafficDemand) {
+      demands.add(trafficDemand);
+   }
 
-    public int getMinDemands() {
-        return minDemands;
-    }
+   public int getMinDem() {
+      return minDem;
+   }
 
-    public void setMinDemands(int minDemands) {
-        this.minDemands = minDemands;
-    }
+   public void setMinDem(int minDem) {
+      this.minDem = minDem;
+   }
 
-    public int getMaxDemands() {
-        return maxDemands;
-    }
+   public int getMaxDem() {
+      return maxDem;
+   }
 
-    public void setMaxDemands(int maxDemands) {
-        this.maxDemands = maxDemands;
-    }
+   public void setMaxDem(int maxDem) {
+      this.maxDem = maxDem;
+   }
 
-    public int getMinBw() {
-        return minBw;
-    }
+   public int getMinBw() {
+      return minBw;
+   }
 
-    public void setMinBw(int minBw) {
-        this.minBw = minBw;
-    }
+   public void setMinBw(int minBw) {
+      this.minBw = minBw;
+   }
 
-    public int getMaxBw() {
-        return maxBw;
-    }
+   public int getMaxBw() {
+      return maxBw;
+   }
 
-    public void setMaxBw(int maxBw) {
-        this.maxBw = maxBw;
-    }
+   public void setMaxBw(int maxBw) {
+      this.maxBw = maxBw;
+   }
 }

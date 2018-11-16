@@ -6,7 +6,7 @@
 
     <groupId>de.tubs</groupId>
     <artifactId>nsp4j-api</artifactId>
-    <version>0.4.3</version>
+    <version>0.4.4</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

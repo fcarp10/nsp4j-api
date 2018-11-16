@@ -4,49 +4,49 @@ import org.graphstream.graph.Node;
 
 public class Server {
 
-    private Node nodeParent;
-    private String id;
-    private int capacity;
-    private Double reliability;
-    private int processingDelay;
+   private Node parent;
+   private String id;
+   private int capacity;
+   private Double reliability;
+   private int processDelay;
 
-    public Server(String id, Node nodeParent, int capacity, int processingDelay) {
-        this.id = id;
-        this.nodeParent = nodeParent;
-        this.capacity = capacity;
-        this.processingDelay = processingDelay;
-    }
+   public Server(String id, Node parent, int capacity, int processDelay) {
+      this.id = id;
+      this.parent = parent;
+      this.capacity = capacity;
+      this.processDelay = processDelay;
+   }
 
-    public Node getNodeParent() {
-        return nodeParent;
-    }
+   public Node getParent() {
+      return parent;
+   }
 
-    public String getId() {
-        return id;
-    }
+   public String getId() {
+      return id;
+   }
 
-    public int getCapacity() {
-        return capacity;
-    }
+   public int getCapacity() {
+      return capacity;
+   }
 
-    public Double getReliability() {
-        return reliability;
-    }
+   public Double getReliability() {
+      return reliability;
+   }
 
-    public int getProcessingDelay() {
-        return processingDelay;
-    }
+   public int getProcessDelay() {
+      return processDelay;
+   }
 
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
+   public void setCapacity(int capacity) {
+      this.capacity = capacity;
+   }
 
-    public void setReliability(Double reliability) {
-        this.reliability = reliability;
-    }
+   public void setReliability(Double reliability) {
+      this.reliability = reliability;
+   }
 
-    public void setProcessingDelay(int processingDelay) {
-        this.processingDelay = processingDelay;
-    }
+   public void setProcessDelay(int processDelay) {
+      this.processDelay = processDelay;
+   }
 }
