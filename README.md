@@ -78,46 +78,52 @@ This file describes the default parameters for the optimization model. The name 
     weights: [0, 1.0, 0]
     # auxiliary parameters
     aux: {
-        "overhead": 100,
-        "minPathsDefault": 3,
-        "maxPathsDefault": 3,
-        "iterations": 1000,
-        "scaling_x": 1.0,
-        "scaling_y": 1.0
+      "iterations": 1000,
+      "offset_results": 0,
+      "scaling_x": 1.0,
+      "scaling_y": 1.0
     }
     # service definitions
     serviceChains:
     - id: 0
       chain: [0, 1, 2]
       attributes: {
-          "minPaths": 1,
-          "maxPaths": 2
+        "minPaths": 1,
+        "maxPaths": 2
       }
     # function definitions
     functions:
     - type: 0
       attributes: {
-          "replicable": false,
-          "load": 1.0,
-          "delay": 10
+        "replicable": false,
+        "load": 1.0,
+        "overhead": 10,
+        "sync_load": 0.1,
+        "delay": 10
       }
     - type: 1
       attributes: {
-          "replicable": true,
-          "load": 1.0,
-          "delay": 10
+        "replicable": true,
+        "load": 1.0,
+        "overhead": 10,
+        "sync_load": 0.1,
+        "delay": 10
       }
     - type: 2
       attributes: {
-          "replicable": false,
-          "load": 1.0,
-          "delay": 10
+        "replicable": false,
+        "load": 1.0,
+        "overhead": 10,
+        "sync_load": 0.1,
+        "delay": 10
       }
     # traffic flow definitions
     trafficFlows:
     - serviceId: 0
-      minDemands: 1
-      maxDemands: 1
+      src: "n1"
+      dst: "n9"
+      minDem: 1
+      maxDem: 1
       minBw: 100
       maxBw: 100
 

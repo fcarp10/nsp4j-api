@@ -16,6 +16,8 @@ import utils.GraphManager;
 import java.math.BigInteger;
 import java.util.*;
 
+import static utils.Definitions.*;
+
 public class Parameters {
 
    // optimization parameters
@@ -29,7 +31,6 @@ public class Parameters {
    private List<Function> functions;
    // traffic flow definitions
    private List<TrafficFlow> trafficFlows;
-
    // local parameters
    private Graph graph;
    private List<Node> nodes;
@@ -46,13 +47,6 @@ public class Parameters {
    private List<Long> seeds;
    private int seedCounter;
    private String scenario;
-
-   private final String CAPACITY = "capacity";
-   private final String NUM_SERVERS = "num_servers";
-   private final String SERVER_CAP = "server_capacity";
-   private final String DELAY = "delay";
-   private final String PROC_DELAY = "processing_delay";
-
    private static final Logger log = LoggerFactory.getLogger(Parameters.class);
 
    public Parameters() {
@@ -82,7 +76,6 @@ public class Parameters {
       } catch (Exception e) {
          log.error("while generating network parameters");
       }
-
    }
 
    private void setLinkParameters() {
@@ -196,7 +189,7 @@ public class Parameters {
       for (Service service : services)
          for (Function f : service.getFunctions())
             if ((boolean) f.getAttribute("replicable"))
-               totalNumPossibleRep += (int) aux.get("maxPathsDefault");
+               totalNumPossibleRep += (int) service.getAttribute("maxPaths");
    }
 
    private void readSeeds() {
