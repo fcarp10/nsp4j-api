@@ -38,12 +38,11 @@ public class TrafficFlow {
             paths.add(p);
    }
 
-   public boolean generateTrafficDemands() {
-      Random random = new Random();
+   public boolean generateTrafficDemands(Random rnd) {
       if (maxBw > 0 & minBw > 0 & src != null & dst != null) {
-         int numOfTrafficDemands = random.nextInt(maxDem + 1 - minDem) + minDem;
+         int numOfTrafficDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
          for (int td = 0; td < numOfTrafficDemands; td++)
-            demands.add(random.nextInt(maxBw + 1 - minBw) + minBw);
+            demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
          return true;
       } else return false;
    }

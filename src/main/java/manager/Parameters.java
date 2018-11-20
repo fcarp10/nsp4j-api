@@ -47,6 +47,7 @@ public class Parameters {
    private List<Long> seeds;
    private int seedCounter;
    private String scenario;
+   private Random rnd;
    private static final Logger log = LoggerFactory.getLogger(Parameters.class);
 
    public Parameters() {
@@ -63,6 +64,7 @@ public class Parameters {
 
    public void initialize(String path) {
       readSeeds();
+      rnd = new Random(getSeed());
       new GraphManager();
       graph = GraphManager.importTopology(path, scenario);
       try {
@@ -109,7 +111,6 @@ public class Parameters {
 
    private void generateTrafficFlows(String path) {
       paths = GraphManager.importPaths(graph, path, scenario + ".txt");
-      Random rnd = new Random();
       TrafficFlow t = trafficFlows.get(0);
       if (t.getSrc() == null && t.getDst() == null) {
          for (Node src : nodes)
@@ -126,7 +127,7 @@ public class Parameters {
          trafficFlows.remove(0);
       } else
          for (TrafficFlow trafficFlow : trafficFlows) {
-            trafficFlow.generateTrafficDemands();
+            trafficFlow.generateTrafficDemands(rnd);
             trafficFlow.setPaths(paths);
          }
    }

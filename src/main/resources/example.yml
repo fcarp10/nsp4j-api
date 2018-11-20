@@ -45,9 +45,7 @@ functions:
 # traffic flow definitions
 trafficFlows:
 - serviceId: 0
-  src: "n1"
-  dst: "n9"
   minDem: 1
-  maxDem: 1
-  minBw: 100
-  maxBw: 100
+  maxDem: 5
+  minBw: 1
+  maxBw: 20
