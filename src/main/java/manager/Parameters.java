@@ -137,7 +137,7 @@ public class Parameters {
          List<Function> functions = new ArrayList<>();
          for (Integer type : serviceChain.getChain())
             functions.add(getFunction(type));
-         services.add(new Service(serviceChain, functions));
+         services.add(new Service(serviceChain, functions, trafficFlow));
       }
    }
 

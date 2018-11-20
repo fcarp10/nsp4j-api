@@ -30,8 +30,8 @@ public class ParametersTest {
       assertNotNull(function.getAttribute("overhead"));
       assertNotNull(function.getAttribute("sync_load"));
       assertNotNull(function.getAttribute("delay"));
-      assertNotNull(parameters.getTrafficFlows().get(0));
-      TrafficFlow trafficFlow = parameters.getTrafficFlows().get(0);
+      assertNotNull(service.getTrafficFlow());
+      TrafficFlow trafficFlow = service.getTrafficFlow();
       assertNotNull(trafficFlow.getDemands());
       assertNotNull(trafficFlow.getPaths());
    }
