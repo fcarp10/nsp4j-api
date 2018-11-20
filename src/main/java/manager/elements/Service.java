@@ -17,11 +17,11 @@ public class Service {
       attributes = new HashMap<>();
    }
 
-   public Service(int id, List<Function> functions, TrafficFlow trafficFlow) {
-      attributes = new HashMap<>();
-      this.id = id;
+   public Service(Service serviceChain, List<Function> functions) {
+      this.id = serviceChain.getId();
       this.functions = functions;
-      this.trafficFlow = trafficFlow;
+      this.trafficFlow = serviceChain.getTrafficFlow();
+      this.attributes = serviceChain.getAttributes();
    }
 
    public Object getAttribute(String key) {

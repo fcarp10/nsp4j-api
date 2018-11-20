@@ -133,11 +133,11 @@ public class Parameters {
 
    private void createSetOfServices() {
       for (TrafficFlow trafficFlow : trafficFlows) {
-         Service service = getServiceChain(trafficFlow.getServiceId());
+         Service serviceChain = getServiceChain(trafficFlow.getServiceId());
          List<Function> functions = new ArrayList<>();
-         for (Integer type : service.getChain())
+         for (Integer type : serviceChain.getChain())
             functions.add(getFunction(type));
-         services.add(new Service(service.getId(), functions, trafficFlow));
+         services.add(new Service(serviceChain, functions));
       }
    }
 
