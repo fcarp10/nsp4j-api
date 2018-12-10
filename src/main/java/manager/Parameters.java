@@ -20,9 +20,6 @@ import static utils.Definitions.*;
 
 public class Parameters {
 
-   // optimization parameters
-   private double gap;
-   private double[] weights;
    // auxiliary parameters
    private Map aux;
    // service definitions
@@ -223,22 +220,6 @@ public class Parameters {
 
    public void setScenario(String scenario) {
       this.scenario = scenario;
-   }
-
-   public double getGap() {
-      return gap;
-   }
-
-   public void setGap(double gap) {
-      this.gap = gap;
-   }
-
-   public double[] getWeights() {
-      return weights;
-   }
-
-   public void setWeights(double[] weights) {
-      this.weights = weights;
    }
 
    public List<Service> getServices() {
