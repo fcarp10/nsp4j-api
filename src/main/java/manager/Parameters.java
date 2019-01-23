@@ -99,8 +99,6 @@ public class Parameters {
          for (int s = 0; s < (int) n.getAttribute(NUM_SERVERS); s++) {
             if (n.getAttribute(SERVER_CAP) == null)
                n.addAttribute(SERVER_CAP, (int) nodes.get(0).getAttribute(SERVER_CAP));
-            if (n.getAttribute(PROC_DELAY) == null)
-               n.addAttribute(PROC_DELAY, (int) nodes.get(0).getAttribute(PROC_DELAY));
             servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(SERVER_CAP)));
          }
       }
