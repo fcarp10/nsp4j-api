@@ -81,13 +81,13 @@ public class Parameters {
       for (Edge link : links) {
          if (link.getAttribute(CAPACITY) == null)
             link.addAttribute(CAPACITY, (int) links.get(0).getAttribute(CAPACITY));
-         if (link.getAttribute(DELAY) == null) {
+         if (link.getAttribute(LINK_DELAY) == null) {
             int n1X = link.getSourceNode().getAttribute("x");
             int n1Y = link.getSourceNode().getAttribute("y");
             int n2X = link.getTargetNode().getAttribute("x");
             int n2Y = link.getTargetNode().getAttribute("y");
             double delay = Math.sqrt(Math.pow(n1X - n2X, 2) + Math.pow(n1Y - n2Y, 2)) / 29.9792458;
-            link.addAttribute(DELAY, delay);
+            link.addAttribute(LINK_DELAY, delay);
          }
       }
    }
@@ -99,7 +99,9 @@ public class Parameters {
          for (int s = 0; s < (int) n.getAttribute(NUM_SERVERS); s++) {
             if (n.getAttribute(SERVER_CAP) == null)
                n.addAttribute(SERVER_CAP, (int) nodes.get(0).getAttribute(SERVER_CAP));
-            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(SERVER_CAP)));
+            if (n.getAttribute(PROCESS_DELAY) == null)
+               n.addAttribute(PROCESS_DELAY, (int) nodes.get(0).getAttribute(PROCESS_DELAY));
+            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(SERVER_CAP), n.getAttribute(PROCESS_DELAY)));
          }
       }
    }

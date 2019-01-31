@@ -8,11 +8,13 @@ public class Server {
    private String id;
    private int capacity;
    private Double reliability;
+   private int processDelay;
 
-   public Server(String id, Node parent, int capacity) {
+   public Server(String id, Node parent, int capacity, int processDelay) {
       this.id = id;
       this.parent = parent;
       this.capacity = capacity;
+      this.processDelay = processDelay;
    }
 
    public Node getParent() {
@@ -31,11 +33,7 @@ public class Server {
       return reliability;
    }
 
-   public void setCapacity(int capacity) {
-      this.capacity = capacity;
-   }
-
-   public void setReliability(Double reliability) {
-      this.reliability = reliability;
+   public int getProcessDelay() {
+      return processDelay;
    }
 }
