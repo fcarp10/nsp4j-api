@@ -25,7 +25,7 @@ public class Parameters {
    // service definitions
    private List<Service> serviceChains;
    // function definitions
-   private List<Function> functions;
+   private List<Function> functionTypes;
    // traffic flow definitions
    private List<TrafficFlow> trafficFlows;
    // local parameters
@@ -54,7 +54,7 @@ public class Parameters {
       services = new ArrayList<>();
       paths = new ArrayList<>();
       trafficFlows = new ArrayList<>();
-      functions = new ArrayList<>();
+      functionTypes = new ArrayList<>();
       serviceChains = new ArrayList<>();
       aux = new HashMap();
    }
@@ -79,8 +79,8 @@ public class Parameters {
 
    private void setLinkParameters() {
       for (Edge link : links) {
-         if (link.getAttribute(CAPACITY) == null)
-            link.addAttribute(CAPACITY, (int) links.get(0).getAttribute(CAPACITY));
+         if (link.getAttribute(LINK_CAPACITY) == null)
+            link.addAttribute(LINK_CAPACITY, (int) links.get(0).getAttribute(LINK_CAPACITY));
          if (link.getAttribute(LINK_DELAY) == null) {
             int n1X = link.getSourceNode().getAttribute("x");
             int n1Y = link.getSourceNode().getAttribute("y");
@@ -94,14 +94,14 @@ public class Parameters {
 
    private void generateServers() {
       for (Node n : nodes) {
-         if (n.getAttribute(NUM_SERVERS) == null)
-            n.addAttribute(NUM_SERVERS, (int) nodes.get(0).getAttribute(NUM_SERVERS));
-         for (int s = 0; s < (int) n.getAttribute(NUM_SERVERS); s++) {
-            if (n.getAttribute(SERVER_CAP) == null)
-               n.addAttribute(SERVER_CAP, (int) nodes.get(0).getAttribute(SERVER_CAP));
-            if (n.getAttribute(PROCESS_DELAY) == null)
-               n.addAttribute(PROCESS_DELAY, (int) nodes.get(0).getAttribute(PROCESS_DELAY));
-            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(SERVER_CAP), n.getAttribute(PROCESS_DELAY)));
+         if (n.getAttribute(NODE_NUM_SERVERS) == null)
+            n.addAttribute(NODE_NUM_SERVERS, (int) nodes.get(0).getAttribute(NODE_NUM_SERVERS));
+         for (int s = 0; s < (int) n.getAttribute(NODE_NUM_SERVERS); s++) {
+            if (n.getAttribute(NODE_SERVER_CAP) == null)
+               n.addAttribute(NODE_SERVER_CAP, (int) nodes.get(0).getAttribute(NODE_SERVER_CAP));
+            if (n.getAttribute(SERVER_PROCESS_DELAY) == null)
+               n.addAttribute(SERVER_PROCESS_DELAY, (int) nodes.get(0).getAttribute(SERVER_PROCESS_DELAY));
+            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(NODE_SERVER_CAP), n.getAttribute(SERVER_PROCESS_DELAY)));
          }
       }
    }
@@ -151,7 +151,7 @@ public class Parameters {
 
    private Function getFunction(int type) {
       Function function = null;
-      for (Function f : functions)
+      for (Function f : functionTypes)
          if (type == f.getType()) {
             function = f;
             break;
@@ -230,8 +230,12 @@ public class Parameters {
       this.services = services;
    }
 
-   public void setFunctions(List<Function> functions) {
-      this.functions = functions;
+   public List<Function> getFunctionTypes() {
+      return functionTypes;
+   }
+
+   public void setFunctionTypes(List<Function> functionTypes) {
+      this.functionTypes = functionTypes;
    }
 
    public void setServiceChains(List<Service> serviceChains) {

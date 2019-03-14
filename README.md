@@ -92,7 +92,7 @@ This file describes the default parameters for the optimization model. The name 
         "maxPaths": 2
       }
     # function definitions
-    functions:
+    functionTypes:
     - type: 0
       attributes: {
         "replicable": false,
