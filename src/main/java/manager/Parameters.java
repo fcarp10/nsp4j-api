@@ -73,7 +73,8 @@ public class Parameters {
          createSetOfServices();
          calculateAuxiliaryValues();
       } catch (Exception e) {
-         log.error("while generating network parameters");
+         log.error("error generating parameters: " + e.toString());
+         System.exit(1);
       }
    }
 
@@ -186,8 +187,8 @@ public class Parameters {
       totalNumPossibleRep = 0;
       for (Service service : services)
          for (Function f : service.getFunctions())
-            if ((boolean) f.getAttribute("replicable"))
-               totalNumPossibleRep += (int) service.getAttribute("maxPaths");
+            if ((boolean) f.getAttribute(FUNCTION_REPLICABLE))
+               totalNumPossibleRep += (int) service.getAttribute(SERVICE_MAX_PATHS);
    }
 
    private void readSeeds() {

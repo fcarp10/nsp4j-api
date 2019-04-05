@@ -27,10 +27,9 @@ public class GraphManager {
       try {
          graph.read(path + filename + ".dgs");
       } catch (IOException e) {
-         log.error(e.getMessage());
+         log.error(e.toString());
       } catch (GraphParseException e) {
-         e.printStackTrace();
-         log.error("reading the .dgs topology file");
+         log.error("error reading topology file: " + e.toString());
       }
       return graph;
    }
@@ -43,8 +42,7 @@ public class GraphManager {
       try {
          stream = new FileInputStream(stringPathFile + filename);
       } catch (FileNotFoundException e) {
-         e.printStackTrace();
-         log.error("reading the .txt path file");
+         log.error("error reading the .txt path file: " + e.getMessage());
       }
       try {
          Scanner input = new Scanner(stream);
@@ -64,7 +62,7 @@ public class GraphManager {
             paths.add(path);
          }
       } catch (Exception e) {
-         log.error("formatting error in .txt path file");
+         log.error("format error .txt path file: " + e.toString());
       }
       return paths;
    }
