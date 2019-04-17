@@ -12,13 +12,13 @@ import java.util.*;
 public class KShortestPathGenerator {
 
    private static Logger log = LoggerFactory.getLogger(KShortestPathGenerator.class);
-   private WritePathsFile writePathsFile;
+   private WritePlainTextFile writePlainTextFile;
    private int maxLength;
    private int numOfKPaths;
    private Graph graph;
 
    public KShortestPathGenerator(Graph graph, int maxLength, int numOfKPaths, String path, String fileName) {
-      writePathsFile = new WritePathsFile(path, fileName);
+      writePlainTextFile = new WritePlainTextFile(path, fileName, ".txt");
       this.maxLength = maxLength;
       this.numOfKPaths = numOfKPaths;
       this.graph = graph;
@@ -50,7 +50,7 @@ public class KShortestPathGenerator {
       if (!pathCollection.getPaths().isEmpty())
          for (int k = 0; k < numOfKPaths; k++) {
             if (k < pathCollection.getPaths().size())
-               writePathsFile.write(pathCollection.getPaths().get(k) + System.getProperty("line.separator"));
+               writePlainTextFile.write(pathCollection.getPaths().get(k) + System.getProperty("line.separator"));
          }
    }
 

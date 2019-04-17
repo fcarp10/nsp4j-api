@@ -5,13 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class WritePathsFile {
+public class WritePlainTextFile {
 
    private File file;
    private FileWriter filewriter;
 
-   public WritePathsFile(String path, String fileName) {
-      file = new File(path + "/" + fileName + ".txt");
+   public WritePlainTextFile(String path, String fileName, String extension) {
+      file = new File(path + "/" + fileName + extension);
       try {
          filewriter = new FileWriter(file, false);
       } catch (IOException e) {
