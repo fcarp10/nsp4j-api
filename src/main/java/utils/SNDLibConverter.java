@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class SNDLibConverter {
 
-   public static void run(String path, String filename) {
+   public static void run(String path, String filename, boolean notBidirectional) {
       Scanner scanner = ConfigFiles.scanPlainTextFileInResources("/" + filename + ".txt");
       WritePlainTextFile writePlainTextFile = new WritePlainTextFile(path, filename, ".dgs");
       String temp;
@@ -66,7 +66,10 @@ public class SNDLibConverter {
          }
          writePlainTextFile.write("ae " + nodesMap.get(temp1[1]) + nodesMap.get(temp1[2]) + " "
                  + nodesMap.get(temp1[1]) + " > " + nodesMap.get(temp1[2]) + System.getProperty("line.separator"));
-         ;
+         if(notBidirectional)
+            writePlainTextFile.write("ae " + nodesMap.get(temp1[2]) + nodesMap.get(temp1[1]) + " "
+                    + nodesMap.get(temp1[2]) + " > " + nodesMap.get(temp1[1]) + System.getProperty("line.separator"));
+
       }
    }
 }
