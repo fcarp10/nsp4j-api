@@ -11,7 +11,7 @@ an n7 x:350 y:100
 an n8 x:350 y:200
 an n9 x:400 y:150
 
-ae n1n2 n1 > n2 capacity:1000
+ae n1n2 n1 > n2 capacity:1000 factor:1
 ae n1n4 n1 > n4
 ae n2n1 n2 > n1
 ae n2n3 n2 > n3

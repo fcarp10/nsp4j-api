@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static utils.Definitions.*;
+import static utils.Definitions.LINK_FACTOR;
 
 public class Parameters {
 
@@ -87,7 +88,10 @@ public class Parameters {
             int n1Y = link.getSourceNode().getAttribute("y");
             int n2X = link.getTargetNode().getAttribute("x");
             int n2Y = link.getTargetNode().getAttribute("y");
-            double delay = Math.sqrt(Math.pow(n1X - n2X, 2) + Math.pow(n1Y - n2Y, 2)) / 29.9792458;
+            int factor = 1;
+            if (link.getAttribute(LINK_FACTOR) != null)
+               factor = link.getAttribute(LINK_FACTOR);
+            double delay = (factor * Math.sqrt(Math.pow(n1X - n2X, 2) + Math.pow(n1Y - n2Y, 2))) / 29.9792458;
             link.addAttribute(LINK_DELAY, delay);
          }
       }
