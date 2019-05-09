@@ -118,6 +118,7 @@ public class Parameters {
          for (Node src : nodes)
             for (Node dst : nodes) {
                if (src == dst) continue;
+               if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null) continue;
                TrafficFlow tf = new TrafficFlow(src.getId(), dst.getId()
                        , serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
                int numOfTrafficDemands = rnd.nextInt(t.getMaxDem() + 1 - t.getMinDem()) + t.getMinDem();
