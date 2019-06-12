@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static utils.Definitions.NODE_CLOUD;
+
 public class KShortestPathGenerator {
 
    private static Logger log = LoggerFactory.getLogger(KShortestPathGenerator.class);
@@ -25,21 +27,28 @@ public class KShortestPathGenerator {
    }
 
    public void run() {
-      for (Node src : graph.getNodeSet())
-         for (Node dst : graph.getNodeSet())
+      List<Node> nodes = new ArrayList<>();
+      List<Node> cloudNodes = new ArrayList<>();
+      for (Node node : graph.getNodeSet()) {
+         if (node.getAttribute(NODE_CLOUD) == null)
+            nodes.add(node);
+         else cloudNodes.add(node);
+      }
+      for (Node src : nodes)
+         for (Node dst : nodes)
             if (!src.equals(dst))
-               findPaths(src, dst);
+               findPaths(src, dst, cloudNodes, null, numOfKPaths);
+      for (Node cloudNode : cloudNodes)
+         for (Node src : nodes)
+            for (Node dst : nodes)
+               if (!src.equals(dst))
+                  findPaths(src, dst, cloudNodes, cloudNode, 1);
    }
 
-   public void run(Node src, Node dst) {
-      if (!src.equals(dst))
-         findPaths(src, dst);
-   }
-
-   private void findPaths(Node src, Node dst) {
+   private void findPaths(Node src, Node dst, List<Node> cloudNodes, Node cloudNode, int numOfKPaths) {
       log.info(src.getId() + " > " + dst.getId());
-      PathCollection pathCollection = new PathCollection();
-      pathCollection.generateAllPaths(src.getId(), dst.getId(), maxLength);
+      PathCollection pathCollection = new PathCollection(cloudNodes, cloudNode);
+      pathCollection.generateAllPaths(src.getId(), dst.getId());
       pathCollection.orderPathsBySize();
       int minimumLength = Integer.MAX_VALUE;
 
@@ -59,23 +68,37 @@ public class KShortestPathGenerator {
       private List<Path> paths = new ArrayList<>();
       private List<String> onPath = new ArrayList<>();
       private Stack<String> pathNodes = new Stack<>();
+      private Node cloudNode;
+      private List<Node> cloudNodes;
 
-      void generateAllPaths(String srcNode, String dstNode, int maxLength) {
+      PathCollection(List<Node> cloudNodes, Node cloudNode) {
+         this.cloudNodes = cloudNodes;
+         if (cloudNode != null)
+            this.cloudNode = cloudNode;
+      }
 
+      void generateAllPaths(String srcNode, String dstNode) {
          pathNodes.push(srcNode);
          onPath.add(srcNode);
-
          if (!srcNode.equals(dstNode)) {
             for (Iterator<Node> it = graph.getNode(srcNode).getNeighborNodeIterator(); it.hasNext(); ) {
                Node currentNode = it.next();
                String currentNodeString = currentNode.getId();
                if (!onPath.contains(currentNodeString))
                   if (onPath.size() < maxLength)
-                     generateAllPaths(currentNodeString, dstNode, maxLength);
+                     generateAllPaths(currentNodeString, dstNode);
             }
-         } else
-            paths.add(generatePath(pathNodes));
-
+         } else {
+            Path path = generatePath(pathNodes);
+            boolean containsCloudNode = false;
+            for (Node cloudNode : cloudNodes)
+               if (path.contains(cloudNode))
+                  containsCloudNode = true;
+            if (cloudNode == null && !containsCloudNode)
+               paths.add(path);
+            if (cloudNode != null && path.contains(cloudNode))
+               paths.add(path);
+         }
          pathNodes.pop();
          onPath.remove(srcNode);
       }
