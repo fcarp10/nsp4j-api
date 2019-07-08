@@ -9,6 +9,7 @@ public class Definitions {
    // link parameters
    public static final String LINK_CAPACITY = "capacity";
    public static final String LINK_DELAY = "delay";
+   public static final String LINK_DISTANCE = "distance";
    public static final String LINK_FACTOR = "factor";
    // service parameters
    public static final String SERVICE_MIN_PATHS = "min_paths";
