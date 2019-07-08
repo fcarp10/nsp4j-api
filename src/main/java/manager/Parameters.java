@@ -84,10 +84,10 @@ public class Parameters {
          if (link.getAttribute(LINK_CAPACITY) == null)
             link.addAttribute(LINK_CAPACITY, (int) links.get(0).getAttribute(LINK_CAPACITY));
          if (link.getAttribute(LINK_DELAY) == null) {
-            int nLon = link.getSourceNode().getAttribute("x");
-            int nLat = link.getSourceNode().getAttribute("y");
-            int mLon = link.getTargetNode().getAttribute("x");
-            int mLat = link.getTargetNode().getAttribute("y");
+            double nLon = link.getSourceNode().getAttribute("x");
+            double nLat = link.getSourceNode().getAttribute("y");
+            double mLon = link.getTargetNode().getAttribute("x");
+            double mLat = link.getTargetNode().getAttribute("y");
             double distance =  calculateDistance(nLat, mLat, nLon, mLon) / 1000;
             link.addAttribute(LINK_DISTANCE, distance);
             double delay = distance / 200;

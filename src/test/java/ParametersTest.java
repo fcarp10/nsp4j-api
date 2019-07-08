@@ -16,7 +16,7 @@ public class ParametersTest {
    @Test
    public void parameters() throws URISyntaxException {
       String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
-      Parameters pm = ConfigFiles.readParameters(path, "/nsf_edge.yml");
+      Parameters pm = ConfigFiles.readParameters(path, "/atlanta_edge.yml");
       pm.initialize(path);
       assertNotNull(pm.getScenario());
       assertNotNull(pm.getServers());
