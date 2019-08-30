@@ -134,27 +134,42 @@ public class Parameters {
 
    private void generateTrafficFlows(String path) {
       paths = GraphManager.importPaths(graph, path, scenario + ".txt");
-      TrafficFlow t = trafficFlows.get(0);
-      if (t.getSrc() == null && t.getDst() == null) {
+      TrafficFlow defaultTrafficFlow = trafficFlows.get(0);
+      int maxDem, minDem, maxBw, minBw;
+      // traffic flows are not specified in the input file
+      if (defaultTrafficFlow.getSrc() == null && defaultTrafficFlow.getDst() == null) {
          for (Node src : nodes)
             for (Node dst : nodes) {
                if (src == dst) continue;
                if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null) continue;
-               TrafficFlow tf = new TrafficFlow(src.getId(), dst.getId()
-                       , serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
-               int numOfTrafficDemands = rnd.nextInt(t.getMaxDem() + 1 - t.getMinDem()) + t.getMinDem();
-               for (int td = 0; td < numOfTrafficDemands; td++)
-                  tf.setTrafficDemand(rnd.nextInt(t.getMaxBw() + 1 - t.getMinBw()) + t.getMinBw());
-               tf.setPaths(paths);
-               trafficFlows.add(tf);
+               TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
+               maxDem = defaultTrafficFlow.getMaxDem();
+               minDem = defaultTrafficFlow.getMinDem();
+               maxBw = defaultTrafficFlow.getMaxBw();
+               minBw = defaultTrafficFlow.getMinBw();
+               generateTrafficDemands(trafficFlow, maxDem, minDem, maxBw, minBw);
+               trafficFlow.setPaths(paths);
+               trafficFlows.add(trafficFlow);
             }
-         trafficFlows.remove(0);
+         trafficFlows.remove(0); //remove default traffic flow
+         // specific traffic flows
       } else
          for (TrafficFlow trafficFlow : trafficFlows) {
-            trafficFlow.generateTrafficDemands(rnd);
+            maxDem = trafficFlow.getMaxDem();
+            minDem = trafficFlow.getMinDem();
+            maxBw = trafficFlow.getMaxBw();
+            minBw = trafficFlow.getMinBw();
+            generateTrafficDemands(trafficFlow, maxDem, minDem, maxBw, minBw);
             trafficFlow.setPaths(paths);
          }
    }
+
+   private void generateTrafficDemands(TrafficFlow trafficFlow, int maxDem, int minDem, int maxBw, int minBw) {
+      int numDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
+      for (int td = 0; td < numDemands; td++)
+         trafficFlow.setTrafficDemand(rnd.nextInt(maxBw + 1 - minBw) + minBw);
+   }
+
 
    private void createSetOfServices() {
       for (TrafficFlow trafficFlow : trafficFlows) {

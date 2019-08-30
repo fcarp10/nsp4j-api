@@ -13,6 +13,7 @@ public class TrafficFlow {
    private String dst;
    private int serviceId;
    private List<Integer> demands;
+   private List<Boolean> aux;
    private List<Path> paths;
    private int minDem;
    private int maxDem;
@@ -36,15 +37,6 @@ public class TrafficFlow {
       for (Path p : allPaths)
          if (p.getNodePath().get(0).getId().equals(src) && p.getNodePath().get(p.size() - 1).getId().equals(dst))
             paths.add(p);
-   }
-
-   public boolean generateTrafficDemands(Random rnd) {
-      if (maxBw > 0 & minBw > 0 & src != null & dst != null) {
-         int numOfTrafficDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
-         for (int td = 0; td < numOfTrafficDemands; td++)
-            demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
-         return true;
-      } else return false;
    }
 
    public String getSrc() {
@@ -117,5 +109,9 @@ public class TrafficFlow {
 
    public void setMaxBw(int maxBw) {
       this.maxBw = maxBw;
+   }
+
+   public List<Boolean> getAux() {
+      return aux;
    }
 }
