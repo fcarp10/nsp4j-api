@@ -23,11 +23,13 @@ public class TrafficFlow {
    public TrafficFlow() {
       demands = new ArrayList<>();
       paths = new ArrayList<>();
+      aux = new ArrayList<>();
    }
 
    public TrafficFlow(String src, String dst, int serviceId) {
       demands = new ArrayList<>();
       paths = new ArrayList<>();
+      aux = new ArrayList<>();
       this.src = src;
       this.dst = dst;
       this.serviceId = serviceId;
