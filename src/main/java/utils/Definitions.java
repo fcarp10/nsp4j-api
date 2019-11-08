@@ -20,8 +20,10 @@ public class Definitions {
    public static final String FUNCTION_LOAD_RATIO = "load_ratio";
    public static final String FUNCTION_OVERHEAD = "overhead";
    public static final String FUNCTION_SYNC_LOAD_RATIO = "sync_load";
+   public static final String FUNCTION_PROCESS_TRAFFIC_DELAY = "process_traffic_delay";
+   public static final String FUNCTION_MAX_CAP_SERVER = "max_cap_server";
+   public static final String FUNCTION_MAX_DELAY = "max_delay";
+   public static final String FUNCTION_MIN_PROCESS_DELAY = "min_process_delay";
    public static final String FUNCTION_PROCESS_DELAY = "process_delay";
    public static final String FUNCTION_MIGRATION_DELAY = "migration_delay";
-   public static final String FUNCTION_MAX_INSTANCES = "max_instances";
-   public static final String FUNCTION_MAX_LOAD = "max_load";
 }

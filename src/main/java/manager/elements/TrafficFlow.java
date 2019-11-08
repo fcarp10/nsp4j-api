@@ -1,5 +1,6 @@
 package manager.elements;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.graphstream.graph.Path;
 
 import java.util.ArrayList;
@@ -11,23 +12,31 @@ public class TrafficFlow {
 
    private String src;
    private String dst;
+   @JsonProperty("service_id")
    private int serviceId;
    private List<Integer> demands;
+   private List<Double> holdingTimes;
    private List<Boolean> aux;
    private List<Path> paths;
+   @JsonProperty("min_dem")
    private int minDem;
+   @JsonProperty("max_dem")
    private int maxDem;
+   @JsonProperty("min_bw")
    private int minBw;
+   @JsonProperty("max_bw")
    private int maxBw;
+   @JsonProperty("min_ht")
+   private Double minHt;
+   @JsonProperty("max_ht")
+   private Double maxHt;
 
    public TrafficFlow() {
-      demands = new ArrayList<>();
-      paths = new ArrayList<>();
-      aux = new ArrayList<>();
    }
 
    public TrafficFlow(String src, String dst, int serviceId) {
       demands = new ArrayList<>();
+      holdingTimes = new ArrayList<>();
       paths = new ArrayList<>();
       aux = new ArrayList<>();
       this.src = src;
@@ -35,10 +44,26 @@ public class TrafficFlow {
       this.serviceId = serviceId;
    }
 
-   public void setPaths(List<Path> allPaths) {
-      for (Path p : allPaths)
-         if (p.getNodePath().get(0).getId().equals(src) && p.getNodePath().get(p.size() - 1).getId().equals(dst))
-            paths.add(p);
+   public void generateTrafficDemands(Random rnd, int minDem, int maxDem, int minBw, int maxBw) {
+      int numDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
+      for (int td = 0; td < numDemands; td++)
+         demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
+   }
+
+   public void generateTrafficDemands(Random rnd) {
+      int numDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
+      for (int td = 0; td < numDemands; td++)
+         demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
+   }
+
+   public void generateHoldingTimes(Random rnd, double minHt, double maxHt) {
+      for (int td = 0; td < demands.size(); td++)
+         holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
+   }
+
+   public void generateHoldingTimes(Random rnd) {
+      for (int td = 0; td < demands.size(); td++)
+         holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
    }
 
    public String getSrc() {
@@ -69,51 +94,53 @@ public class TrafficFlow {
       return demands;
    }
 
+   public List<Double> getHoldingTimes() {
+      return holdingTimes;
+   }
+
+   public void setHoldingTimes(List<Double> holdingTimes) {
+      this.holdingTimes = holdingTimes;
+   }
+
    public List<Path> getPaths() {
       return paths;
+   }
+
+   public void setPaths(List<Path> allPaths) {
+      for (Path p : allPaths)
+         if (p.getNodePath().get(0).getId().equals(src) && p.getNodePath().get(p.size() - 1).getId().equals(dst))
+            paths.add(p);
    }
 
    public void setAdmissiblePath(Path admissiblePath) {
       this.paths.add(admissiblePath);
    }
 
-   public void setTrafficDemand(Integer trafficDemand) {
-      demands.add(trafficDemand);
-   }
-
    public int getMinDem() {
       return minDem;
-   }
-
-   public void setMinDem(int minDem) {
-      this.minDem = minDem;
    }
 
    public int getMaxDem() {
       return maxDem;
    }
 
-   public void setMaxDem(int maxDem) {
-      this.maxDem = maxDem;
-   }
-
    public int getMinBw() {
       return minBw;
-   }
-
-   public void setMinBw(int minBw) {
-      this.minBw = minBw;
    }
 
    public int getMaxBw() {
       return maxBw;
    }
 
-   public void setMaxBw(int maxBw) {
-      this.maxBw = maxBw;
-   }
-
    public List<Boolean> getAux() {
       return aux;
+   }
+
+   public Double getMinHt() {
+      return minHt;
+   }
+
+   public Double getMaxHt() {
+      return maxHt;
    }
 }

@@ -1,5 +1,6 @@
 package manager;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import manager.elements.Function;
 import manager.elements.Server;
 import manager.elements.Service;
@@ -17,17 +18,20 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static utils.Definitions.*;
-import static utils.Definitions.LINK_FACTOR;
 
 public class Parameters {
 
+   private static final Logger log = LoggerFactory.getLogger(Parameters.class);
    // auxiliary parameters
    private Map aux;
    // service definitions
+   @JsonProperty("service_chains")
    private List<Service> serviceChains;
    // function definitions
+   @JsonProperty("function_types")
    private List<Function> functionTypes;
    // traffic flow definitions
+   @JsonProperty("traffic_flows")
    private List<TrafficFlow> trafficFlows;
    // local parameters
    private Graph graph;
@@ -46,7 +50,6 @@ public class Parameters {
    private int seedCounter;
    private String scenario;
    private Random rnd;
-   private static final Logger log = LoggerFactory.getLogger(Parameters.class);
 
    public Parameters() {
       nodes = new ArrayList<>();
@@ -58,6 +61,29 @@ public class Parameters {
       functionTypes = new ArrayList<>();
       serviceChains = new ArrayList<>();
       aux = new HashMap();
+   }
+
+   /**
+    * Calculate calculateDistance between two points in latitude and longitude taking
+    * into account height difference. If you are not interested in height
+    * difference pass 0.0. Uses Haversine method as its base.
+    * <p>
+    * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
+    * el2 End altitude in meters
+    *
+    * @returns Distance in Meters
+    */
+   public static double calculateDistance(double lat1, double lat2, double lon1, double lon2) {
+      final int earthRadius = 6371;
+      double latDistance = Math.toRadians(lat2 - lat1);
+      double lonDistance = Math.toRadians(lon2 - lon1);
+      double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+              + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+              * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+      double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      double distance = earthRadius * c * 1000;
+      distance = Math.pow(distance, 2);
+      return Math.sqrt(distance);
    }
 
    public void initialize(String path) {
@@ -88,34 +114,12 @@ public class Parameters {
             double nLat = link.getSourceNode().getAttribute("y");
             double mLon = link.getTargetNode().getAttribute("x");
             double mLat = link.getTargetNode().getAttribute("y");
-            double distance =  calculateDistance(nLat, mLat, nLon, mLon) / 1000;
+            double distance = calculateDistance(nLat, mLat, nLon, mLon) / 1000;
             link.addAttribute(LINK_DISTANCE, distance);
             double delay = distance / 200;
             link.addAttribute(LINK_DELAY, delay);
          }
       }
-   }
-
-   /**
-    * Calculate calculateDistance between two points in latitude and longitude taking
-    * into account height difference. If you are not interested in height
-    * difference pass 0.0. Uses Haversine method as its base.
-    *
-    * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
-    * el2 End altitude in meters
-    * @returns Distance in Meters
-    */
-   public static double calculateDistance(double lat1, double lat2, double lon1, double lon2) {
-      final int earthRadius = 6371;
-      double latDistance = Math.toRadians(lat2 - lat1);
-      double lonDistance = Math.toRadians(lon2 - lon1);
-      double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-              + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-              * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-      double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      double distance = earthRadius * c * 1000;
-      distance = Math.pow(distance, 2);
-      return Math.sqrt(distance);
    }
 
    private void generateServers() {
@@ -134,42 +138,28 @@ public class Parameters {
 
    private void generateTrafficFlows(String path) {
       paths = GraphManager.importPaths(graph, path, scenario + ".txt");
-      TrafficFlow defaultTrafficFlow = trafficFlows.get(0);
-      int maxDem, minDem, maxBw, minBw;
+      TrafficFlow dtf = trafficFlows.get(0);
       // traffic flows are not specified in the input file
-      if (defaultTrafficFlow.getSrc() == null && defaultTrafficFlow.getDst() == null) {
+      if (dtf.getSrc() == null && dtf.getDst() == null) {
          for (Node src : nodes)
             for (Node dst : nodes) {
                if (src == dst) continue;
                if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null) continue;
                TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
-               maxDem = defaultTrafficFlow.getMaxDem();
-               minDem = defaultTrafficFlow.getMinDem();
-               maxBw = defaultTrafficFlow.getMaxBw();
-               minBw = defaultTrafficFlow.getMinBw();
-               generateTrafficDemands(trafficFlow, maxDem, minDem, maxBw, minBw);
+               trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(), dtf.getMinBw());
                trafficFlow.setPaths(paths);
+               trafficFlow.generateHoldingTimes(rnd, dtf.getMinHt(), dtf.getMaxHt());
                trafficFlows.add(trafficFlow);
             }
          trafficFlows.remove(0); //remove default traffic flow
          // specific traffic flows
       } else
          for (TrafficFlow trafficFlow : trafficFlows) {
-            maxDem = trafficFlow.getMaxDem();
-            minDem = trafficFlow.getMinDem();
-            maxBw = trafficFlow.getMaxBw();
-            minBw = trafficFlow.getMinBw();
-            generateTrafficDemands(trafficFlow, maxDem, minDem, maxBw, minBw);
+            trafficFlow.generateTrafficDemands(rnd);
             trafficFlow.setPaths(paths);
+            trafficFlow.generateHoldingTimes(rnd);
          }
    }
-
-   private void generateTrafficDemands(TrafficFlow trafficFlow, int maxDem, int minDem, int maxBw, int minBw) {
-      int numDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
-      for (int td = 0; td < numDemands; td++)
-         trafficFlow.setTrafficDemand(rnd.nextInt(maxBw + 1 - minBw) + minBw);
-   }
-
 
    private void createSetOfServices() {
       for (TrafficFlow trafficFlow : trafficFlows) {
@@ -288,12 +278,12 @@ public class Parameters {
       return trafficFlows;
    }
 
-   public List<Path> getPaths() {
-      return paths;
-   }
-
    public void setTrafficFlows(List<TrafficFlow> trafficFlows) {
       this.trafficFlows = trafficFlows;
+   }
+
+   public List<Path> getPaths() {
+      return paths;
    }
 
    public List<Server> getServers() {
