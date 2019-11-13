@@ -32,6 +32,10 @@ public class TrafficFlow {
    private Double maxHt;
 
    public TrafficFlow() {
+      demands = new ArrayList<>();
+      holdingTimes = new ArrayList<>();
+      paths = new ArrayList<>();
+      aux = new ArrayList<>();
    }
 
    public TrafficFlow(String src, String dst, int serviceId) {
