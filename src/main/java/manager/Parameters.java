@@ -146,7 +146,7 @@ public class Parameters {
                if (src == dst) continue;
                if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null) continue;
                TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
-               trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(), dtf.getMinBw());
+               trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(), dtf.getMaxBw());
                trafficFlow.setPaths(paths);
                trafficFlow.generateHoldingTimes(rnd, dtf.getMinHt(), dtf.getMaxHt());
                trafficFlows.add(trafficFlow);
