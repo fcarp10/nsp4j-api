@@ -38,7 +38,6 @@ public class ParametersTest {
             assertNotNull(f.getAttribute(FUNCTION_MIGRATION_DELAY));
          }
          assertTrue(s.getTrafficFlow().getDemands().size() > 0);
-         assertTrue(s.getTrafficFlow().getHoldingTimes().size() > 0);
          assertTrue(s.getTrafficFlow().getPaths().size() > 0);
       }
    }

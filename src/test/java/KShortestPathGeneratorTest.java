@@ -11,10 +11,10 @@ public class KShortestPathGeneratorTest {
 
    @Test
    public void inputParameters() throws URISyntaxException {
-      final String TOPOLOGY = "test";
+      final String TOPOLOGY = "atlanta";
       String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
       Graph graph = GraphManager.importTopology(path, TOPOLOGY);
-      KShortestPathGenerator kShortestPathGenerator = new KShortestPathGenerator(graph, 10, 5, path, TOPOLOGY);
+      KShortestPathGenerator kShortestPathGenerator = new KShortestPathGenerator(graph, 10, 3, path, TOPOLOGY);
       kShortestPathGenerator.run();
    }
 }

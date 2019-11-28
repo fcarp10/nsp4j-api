@@ -60,9 +60,10 @@ public class TrafficFlow {
          demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
    }
 
-   public void generateHoldingTimes(Random rnd, double minHt, double maxHt) {
-      for (int td = 0; td < demands.size(); td++)
-         holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
+   public void generateHoldingTimes(Random rnd, Double minHt, Double maxHt) {
+      if (minHt != null && maxHt != null)
+         for (int td = 0; td < demands.size(); td++)
+            holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
    }
 
    public void generateHoldingTimes(Random rnd) {
