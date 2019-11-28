@@ -67,8 +67,9 @@ public class TrafficFlow {
    }
 
    public void generateHoldingTimes(Random rnd) {
-      for (int td = 0; td < demands.size(); td++)
-         holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
+      if (minHt != null && maxHt != null)
+         for (int td = 0; td < demands.size(); td++)
+            holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
    }
 
    public String getSrc() {
