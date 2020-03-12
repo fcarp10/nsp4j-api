@@ -145,7 +145,11 @@ public class Parameters {
             for (Node dst : nodes) {
                if (src == dst) continue;
                if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null) continue;
-               TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
+               TrafficFlow trafficFlow;
+               if (dtf.getServiceId() == null)
+                  trafficFlow = new TrafficFlow(src.getId(), dst.getId(), serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
+               else
+                  trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServiceId());
                trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(), dtf.getMaxBw());
                trafficFlow.setPaths(paths);
                trafficFlow.generateHoldingTimes(rnd, dtf.getMinHt(), dtf.getMaxHt());

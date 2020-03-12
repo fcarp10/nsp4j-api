@@ -13,7 +13,7 @@ public class TrafficFlow {
    private String src;
    private String dst;
    @JsonProperty("service_id")
-   private int serviceId;
+   private Integer serviceId;
    private List<Integer> demands;
    private List<Double> holdingTimes;
    private List<Boolean> aux;
@@ -88,11 +88,11 @@ public class TrafficFlow {
       this.dst = dst;
    }
 
-   public int getServiceId() {
+   public Integer getServiceId() {
       return serviceId;
    }
 
-   public void setServiceId(int serviceId) {
+   public void setServiceId(Integer serviceId) {
       this.serviceId = serviceId;
    }
 
