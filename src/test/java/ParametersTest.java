@@ -20,7 +20,6 @@ public class ParametersTest {
       pm.initialize(path);
       assertNotNull(pm.getScenario());
       assertNotNull(pm.getServers());
-      assertNotNull(pm.getFunctionTypes());
       for (Service s : pm.getServices()) {
          assertNotNull(s.getAttribute(SERVICE_MIN_PATHS));
          assertNotNull(s.getAttribute(SERVICE_MAX_PATHS));

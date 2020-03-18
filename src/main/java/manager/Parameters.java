@@ -43,9 +43,9 @@ public class Parameters {
    private int pathsTrafficFlow;
    private int demandsTrafficFlow;
    private int serviceLength;
+   private int numOfFunctionTypes;
    private double totalTraffic;
    private int totalNumFunctions;
-   private int totalNumPossibleRep;
    private List<Long> seeds;
    private int seedCounter;
    private String scenario;
@@ -219,11 +219,12 @@ public class Parameters {
       for (Service service : services)
          totalNumFunctions += service.getFunctions().size();
 
-      totalNumPossibleRep = 0;
+      List<Integer> types = new ArrayList<>();
       for (Service service : services)
          for (Function f : service.getFunctions())
-            if ((boolean) f.getAttribute(FUNCTION_REPLICABLE))
-               totalNumPossibleRep += (int) service.getAttribute(SERVICE_MAX_PATHS);
+            if (!types.contains(f.getType()))
+               types.add(f.getType());
+      numOfFunctionTypes = types.size();
    }
 
    private void readSeeds() {
@@ -264,10 +265,6 @@ public class Parameters {
 
    public void setServices(List<Service> services) {
       this.services = services;
-   }
-
-   public List<Function> getFunctionTypes() {
-      return functionTypes;
    }
 
    public void setFunctionTypes(List<Function> functionTypes) {
@@ -322,8 +319,8 @@ public class Parameters {
       return totalNumFunctions;
    }
 
-   public int getTotalNumPossibleRep() {
-      return totalNumPossibleRep;
+   public int getNumOfFunctionTypes() {
+      return numOfFunctionTypes;
    }
 
    public Map getAux() {
