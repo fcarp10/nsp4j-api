@@ -23,7 +23,7 @@ public class ParametersTest {
       for (Service s : pm.getServices()) {
          assertNotNull(s.getAttribute(SERVICE_MIN_PATHS));
          assertNotNull(s.getAttribute(SERVICE_MAX_PATHS));
-         assertNotNull(s.getAttribute(SERVICE_MAX_DELAY));
+         assertTrue(s.getMaxDelay() > 0);
          for (Function f : s.getFunctions()) {
             assertNotNull(f.getAttribute(FUNCTION_REPLICABLE));
             assertNotNull(f.getAttribute(FUNCTION_LOAD_RATIO));

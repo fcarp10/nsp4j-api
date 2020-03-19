@@ -163,15 +163,18 @@ public class Parameters {
       for (TrafficFlow trafficFlow : trafficFlows) {
          int rndService = rnd.nextInt(trafficFlow.getServices().length);
          int serviceId = trafficFlow.getServices()[rndService];
-         Service serviceChain = getServiceChain(serviceId);
+         Service service = getServiceChain(serviceId);
          List<Function> functions = new ArrayList<>();
-         for (Integer type : serviceChain.getChain())
+         int multFactor = trafficFlow.getServiceLengthMult()[rndService];
+         for (Integer type : service.getChain())
             if (type != 0)
-               for (int i = 0; i < trafficFlow.getServiceLengthMult()[rndService]; i++)
+               for (int i = 0; i < multFactor; i++)
                   functions.add(getFunction(type));
             else
                functions.add(getFunction(type));
-         services.add(new Service(serviceChain, functions, trafficFlow));
+         int modifiedId = (10 * multFactor) + serviceId;
+         double modifiedMaxDelay = service.getMaxDelay() + (service.getMaxDelay() / service.getChain().length) * (multFactor - 1);
+         services.add(new Service(modifiedId, modifiedMaxDelay, functions, trafficFlow, service.getAttributes()));
       }
    }
 

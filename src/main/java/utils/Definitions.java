@@ -10,11 +10,9 @@ public class Definitions {
    public static final String LINK_CAPACITY = "capacity";
    public static final String LINK_DELAY = "delay";
    public static final String LINK_DISTANCE = "distance";
-   public static final String LINK_FACTOR = "factor";
    // service parameters
    public static final String SERVICE_MIN_PATHS = "min_paths";
    public static final String SERVICE_MAX_PATHS = "max_paths";
-   public static final String SERVICE_MAX_DELAY = "max_delay";
    // function parameters
    public static final String FUNCTION_REPLICABLE = "replicable";
    public static final String FUNCTION_LOAD_RATIO = "load_ratio";
