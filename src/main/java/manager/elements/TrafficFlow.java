@@ -12,10 +12,10 @@ public class TrafficFlow {
 
    private String src;
    private String dst;
-   @JsonProperty("service_id")
-   private Integer serviceId;
+   private int[] services;
+   @JsonProperty("service_length_mult")
+   private int[] serviceLengthMult;
    private List<Integer> demands;
-   private List<Double> holdingTimes;
    private List<Boolean> aux;
    private List<Path> paths;
    @JsonProperty("min_dem")
@@ -26,26 +26,22 @@ public class TrafficFlow {
    private int minBw;
    @JsonProperty("max_bw")
    private int maxBw;
-   @JsonProperty("min_ht")
-   private Double minHt;
-   @JsonProperty("max_ht")
-   private Double maxHt;
+
 
    public TrafficFlow() {
       demands = new ArrayList<>();
-      holdingTimes = new ArrayList<>();
       paths = new ArrayList<>();
       aux = new ArrayList<>();
    }
 
-   public TrafficFlow(String src, String dst, int serviceId) {
+   public TrafficFlow(String src, String dst, int[] services, int[] serviceLengthMult) {
       demands = new ArrayList<>();
-      holdingTimes = new ArrayList<>();
       paths = new ArrayList<>();
       aux = new ArrayList<>();
       this.src = src;
       this.dst = dst;
-      this.serviceId = serviceId;
+      this.services = services;
+      this.serviceLengthMult = serviceLengthMult;
    }
 
    public void generateTrafficDemands(Random rnd, int minDem, int maxDem, int minBw, int maxBw) {
@@ -60,20 +56,16 @@ public class TrafficFlow {
          demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
    }
 
-   public void generateHoldingTimes(Random rnd, Double minHt, Double maxHt) {
-      if (minHt != null && maxHt != null)
-         for (int td = 0; td < demands.size(); td++)
-            holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
-   }
-
-   public void generateHoldingTimes(Random rnd) {
-      if (minHt != null && maxHt != null)
-         for (int td = 0; td < demands.size(); td++)
-            holdingTimes.add(minHt + (maxHt - minHt) * rnd.nextDouble());
-   }
-
    public String getSrc() {
       return src;
+   }
+
+   public int[] getServices() {
+      return services;
+   }
+
+   public int[] getServiceLengthMult() {
+      return serviceLengthMult;
    }
 
    public void setSrc(String src) {
@@ -88,24 +80,8 @@ public class TrafficFlow {
       this.dst = dst;
    }
 
-   public Integer getServiceId() {
-      return serviceId;
-   }
-
-   public void setServiceId(Integer serviceId) {
-      this.serviceId = serviceId;
-   }
-
    public List<Integer> getDemands() {
       return demands;
-   }
-
-   public List<Double> getHoldingTimes() {
-      return holdingTimes;
-   }
-
-   public void setHoldingTimes(List<Double> holdingTimes) {
-      this.holdingTimes = holdingTimes;
    }
 
    public List<Path> getPaths() {
@@ -142,11 +118,4 @@ public class TrafficFlow {
       return aux;
    }
 
-   public Double getMinHt() {
-      return minHt;
-   }
-
-   public Double getMaxHt() {
-      return maxHt;
-   }
 }

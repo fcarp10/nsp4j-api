@@ -145,14 +145,9 @@ public class Parameters {
             for (Node dst : nodes) {
                if (src == dst) continue;
                if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null) continue;
-               TrafficFlow trafficFlow;
-               if (dtf.getServiceId() == null)
-                  trafficFlow = new TrafficFlow(src.getId(), dst.getId(), serviceChains.get(rnd.nextInt(serviceChains.size())).getId());
-               else
-                  trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServiceId());
+               TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServices(), dtf.getServiceLengthMult());
                trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(), dtf.getMaxBw());
                trafficFlow.setPaths(paths);
-               trafficFlow.generateHoldingTimes(rnd, dtf.getMinHt(), dtf.getMaxHt());
                trafficFlows.add(trafficFlow);
             }
          trafficFlows.remove(0); //remove default traffic flow
@@ -161,16 +156,21 @@ public class Parameters {
          for (TrafficFlow trafficFlow : trafficFlows) {
             trafficFlow.generateTrafficDemands(rnd);
             trafficFlow.setPaths(paths);
-            trafficFlow.generateHoldingTimes(rnd);
          }
    }
 
    private void createSetOfServices() {
       for (TrafficFlow trafficFlow : trafficFlows) {
-         Service serviceChain = getServiceChain(trafficFlow.getServiceId());
+         int rndService = rnd.nextInt(trafficFlow.getServices().length);
+         int serviceId = trafficFlow.getServices()[rndService];
+         Service serviceChain = getServiceChain(serviceId);
          List<Function> functions = new ArrayList<>();
          for (Integer type : serviceChain.getChain())
-            functions.add(getFunction(type));
+            if (type != 0)
+               for (int i = 0; i < trafficFlow.getServiceLengthMult()[rndService]; i++)
+                  functions.add(getFunction(type));
+            else
+               functions.add(getFunction(type));
          services.add(new Service(serviceChain, functions, trafficFlow));
       }
    }
