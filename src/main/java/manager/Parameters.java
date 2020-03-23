@@ -114,9 +114,9 @@ public class Parameters {
             double nLat = link.getSourceNode().getAttribute("y");
             double mLon = link.getTargetNode().getAttribute("x");
             double mLat = link.getTargetNode().getAttribute("y");
-            double distance = calculateDistance(nLat, mLat, nLon, mLon) / 1000;
+            double distance = calculateDistance(nLat, mLat, nLon, mLon) / 1000; // convert m to km
             link.addAttribute(LINK_DISTANCE, distance);
-            double delay = distance / 200;
+            double delay = distance / 200000; // in sec
             link.addAttribute(LINK_DELAY, delay);
          }
       }
