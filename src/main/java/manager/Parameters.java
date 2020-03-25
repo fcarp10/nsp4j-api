@@ -43,7 +43,6 @@ public class Parameters {
    private int pathsTrafficFlow;
    private int demandsTrafficFlow;
    private int serviceLength;
-   private int numOfFunctionTypes;
    private double totalTraffic;
    private int totalNumFunctions;
    private List<Long> seeds;
@@ -222,12 +221,6 @@ public class Parameters {
       for (Service service : services)
          totalNumFunctions += service.getFunctions().size();
 
-      List<Integer> types = new ArrayList<>();
-      for (Service service : services)
-         for (Function f : service.getFunctions())
-            if (!types.contains(f.getType()))
-               types.add(f.getType());
-      numOfFunctionTypes = types.size();
    }
 
    private void readSeeds() {
@@ -264,6 +257,10 @@ public class Parameters {
 
    public List<Service> getServices() {
       return services;
+   }
+
+   public List<Function> getFunctionTypes() {
+      return functionTypes;
    }
 
    public void setServices(List<Service> services) {
@@ -320,10 +317,6 @@ public class Parameters {
 
    public int getTotalNumFunctions() {
       return totalNumFunctions;
-   }
-
-   public int getNumOfFunctionTypes() {
-      return numOfFunctionTypes;
    }
 
    public Map getAux() {
