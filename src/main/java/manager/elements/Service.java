@@ -13,6 +13,8 @@ public class Service {
    private int[] chain;
    @JsonProperty("max_delay")
    private double maxDelay;
+   @JsonProperty("max_propagation_delay")
+   private double maxPropagationDelay;
    private transient List<Function> functions;
    private TrafficFlow trafficFlow;
    private Map<String, Object> attributes;
@@ -21,9 +23,10 @@ public class Service {
       attributes = new HashMap<>();
    }
 
-   public Service(int id, double maxDelay, List<Function> functions, TrafficFlow trafficFlow, Map<String, Object> attributes) {
+   public Service(int id, double maxDelay, double maxPropagationDelay, List<Function> functions, TrafficFlow trafficFlow, Map<String, Object> attributes) {
       this.id = id;
       this.maxDelay = maxDelay;
+      this.maxPropagationDelay = maxPropagationDelay;
       this.functions = functions;
       this.trafficFlow = trafficFlow;
       this.attributes = attributes;
@@ -43,6 +46,10 @@ public class Service {
 
    public double getMaxDelay() {
       return maxDelay;
+   }
+
+   public double getMaxPropagationDelay() {
+      return maxPropagationDelay;
    }
 
    public int[] getChain() {

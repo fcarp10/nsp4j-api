@@ -172,8 +172,7 @@ public class Parameters {
             else
                functions.add(getFunction(type));
          int modifiedId = (10 * multFactor) + serviceId;
-         double modifiedMaxDelay = service.getMaxDelay() + (service.getMaxDelay() / service.getChain().length) * (multFactor - 1);
-         services.add(new Service(modifiedId, modifiedMaxDelay, functions, trafficFlow, service.getAttributes()));
+         services.add(new Service(modifiedId, service.getMaxDelay(), service.getMaxPropagationDelay(), functions, trafficFlow, service.getAttributes()));
       }
    }
 
