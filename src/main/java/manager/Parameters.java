@@ -166,33 +166,29 @@ public class Parameters {
          List<Function> functions = new ArrayList<>();
          int multFactor = trafficFlow.getServiceLengthMult()[rndService];
          int modifiedId;
-         if (multFactor == 1) {
-            for (Integer type : service.getChain())
-               functions.add(getFunction(type));
-            modifiedId = serviceId;
-         } else {
-            // create new chain considering the multFactor
-            int[] chain = new int[service.getChain().length * multFactor];
-            for (int i = 0; i < service.getChain().length; i++) {
-               chain[i] = service.getChain()[i];
-               for (int j = 0; j < multFactor; j++)
-                  chain[i + (service.getChain().length * j)] = service.getChain()[i];
-            }
-            // shuffle the elements randomly
-            for (int i = 0; i < chain.length; i++) {
-               int randomIndexToSwap = rnd.nextInt(chain.length);
-               int temp = chain[randomIndexToSwap];
-               chain[randomIndexToSwap] = chain[i];
-               chain[i] = temp;
-            }
-            for (Integer type : chain)
-               functions.add(getFunction(type));
 
-            StringBuilder id = new StringBuilder();
-            for (Integer myInt : chain)
-               id.append(myInt);
-            modifiedId = Integer.parseInt(id.toString());
+         // create new chain considering the multFactor
+         int[] chain = new int[service.getChain().length * multFactor];
+         for (int i = 0; i < service.getChain().length; i++) {
+            chain[i] = service.getChain()[i];
+            for (int j = 0; j < multFactor; j++)
+               chain[i + (service.getChain().length * j)] = service.getChain()[i];
          }
+         // shuffle the elements randomly
+         for (int i = 0; i < chain.length; i++) {
+            int randomIndexToSwap = rnd.nextInt(chain.length);
+            int temp = chain[randomIndexToSwap];
+            chain[randomIndexToSwap] = chain[i];
+            chain[i] = temp;
+         }
+         for (Integer type : chain)
+            functions.add(getFunction(type));
+
+         StringBuilder id = new StringBuilder();
+         for (Integer myInt : chain)
+            id.append(myInt);
+         modifiedId = Integer.parseInt(id.toString());
+
          services.add(new Service(modifiedId, service.getMaxDelay(), service.getMaxPropagationDelay(), functions, trafficFlow, service.getAttributes()));
       }
    }
