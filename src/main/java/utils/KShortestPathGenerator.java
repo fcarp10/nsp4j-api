@@ -16,51 +16,95 @@ public class KShortestPathGenerator {
    private static Logger log = LoggerFactory.getLogger(KShortestPathGenerator.class);
    private WritePlainTextFile writePlainTextFile;
    private int maxLength;
-   private int numOfKPaths;
    private Graph graph;
 
-   public KShortestPathGenerator(Graph graph, int maxLength, int numOfKPaths, String path, String fileName) {
+   public KShortestPathGenerator(String path, String fileName, Graph graph, int maxLength) {
       writePlainTextFile = new WritePlainTextFile(path, fileName, ".txt");
-      this.maxLength = maxLength;
-      this.numOfKPaths = numOfKPaths;
       this.graph = graph;
+      this.maxLength = maxLength;
    }
 
-   public void run() {
+   public void run(int numOfKPaths) {
+      List<Node> nodes = new ArrayList<>(graph.getNodeSet());
+      for (Node src : nodes)
+         for (Node dst : nodes)
+            runFromNtoM(src, dst, numOfKPaths);
+   }
+
+   public void runTraversingIntermediateNode() {
       List<Node> nodes = new ArrayList<>();
-      List<Node> cloudNodes = new ArrayList<>();
+      List<Node> intermediateNodes = new ArrayList<>();
+
       for (Node node : graph.getNodeSet()) {
          if (node.getAttribute(NODE_CLOUD) == null)
             nodes.add(node);
-         else cloudNodes.add(node);
+         else intermediateNodes.add(node);
       }
+
       for (Node src : nodes)
          for (Node dst : nodes)
-            if (!src.equals(dst))
-               findPaths(src, dst, cloudNodes, null, numOfKPaths);
-      for (Node cloudNode : cloudNodes)
-         for (Node src : nodes)
-            for (Node dst : nodes)
-               if (!src.equals(dst))
-                  findPaths(src, dst, cloudNodes, cloudNode, 1);
+            if (!src.equals(dst)) {
+               List<Path> paths = generatePaths(src, dst);
+               for (Node n : intermediateNodes)
+                  printKPathsTraversingNodeN(paths, 1, n);
+            }
    }
 
-   private void findPaths(Node src, Node dst, List<Node> cloudNodes, Node cloudNode, int numOfKPaths) {
+   public void runFromAndToSpecificNode(String specificNodeString, int numOfKPaths) {
+      List<Node> nodes = new ArrayList<>(graph.getNodeSet());
+      Node specificNode = null;
+      for (Node n : nodes)
+         if (n.getId().equals(specificNodeString))
+            specificNode = n;
+
+      if (specificNode != null)
+         for (Node n : nodes)
+            if (!n.equals(specificNode)) {
+               List<Path> paths = generatePaths(n, specificNode);
+               printKPaths(paths, numOfKPaths);
+               paths = generatePaths(specificNode, n);
+               printKPaths(paths, numOfKPaths);
+            }
+   }
+
+   public void runFromNtoM(Node src, Node dst, int numOfKPaths) {
+      if (!src.equals(dst)) {
+         List<Path> paths = generatePaths(src, dst);
+         printKPaths(paths, numOfKPaths);
+      }
+   }
+
+   void printKPaths(List<Path> paths, int numOfPaths) {
+      for (int p = 0; p < numOfPaths; p++)
+         printPath(paths, p);
+   }
+
+   void printKPathsTraversingNodeN(List<Path> paths, int numOfPaths, Node nodeN) {
+      int printedPaths = 0;
+      for (int p = 0; p < paths.size(); p++)
+         if (printedPaths < numOfPaths) {
+            if (paths.get(p).getNodePath().contains(nodeN)) {
+               printPath(paths, p);
+               printedPaths++;
+            }
+         } else break;
+   }
+
+   void printPath(List<Path> paths, int p) {
+      if (p < paths.size())
+         writePlainTextFile.write(paths.get(p) + System.getProperty("line.separator"));
+      else
+         log.error("Not enough paths found, increase max_length or decrease number of k paths");
+   }
+
+   private List<Path> generatePaths(Node src, Node dst) {
       log.info(src.getId() + " > " + dst.getId());
-      PathCollection pathCollection = new PathCollection(cloudNodes, cloudNode);
-      pathCollection.generateAllPaths(src.getId(), dst.getId());
+      PathCollection pathCollection = new PathCollection();
+
+      pathCollection.generateSetOfPaths(src.getId(), dst.getId());
       pathCollection.orderPathsBySize();
-      int minimumLength = Integer.MAX_VALUE;
 
-      for (Path path : pathCollection.getPaths())
-         if (path.size() < minimumLength)
-            minimumLength = path.size();
-
-      if (!pathCollection.getPaths().isEmpty())
-         for (int k = 0; k < numOfKPaths; k++) {
-            if (k < pathCollection.getPaths().size())
-               writePlainTextFile.write(pathCollection.getPaths().get(k) + System.getProperty("line.separator"));
-         }
+      return pathCollection.getPaths();
    }
 
    private class PathCollection {
@@ -68,16 +112,8 @@ public class KShortestPathGenerator {
       private List<Path> paths = new ArrayList<>();
       private List<String> onPath = new ArrayList<>();
       private Stack<String> pathNodes = new Stack<>();
-      private Node cloudNode;
-      private List<Node> cloudNodes;
 
-      PathCollection(List<Node> cloudNodes, Node cloudNode) {
-         this.cloudNodes = cloudNodes;
-         if (cloudNode != null)
-            this.cloudNode = cloudNode;
-      }
-
-      void generateAllPaths(String srcNode, String dstNode) {
+      void generateSetOfPaths(String srcNode, String dstNode) {
          pathNodes.push(srcNode);
          onPath.add(srcNode);
          if (!srcNode.equals(dstNode)) {
@@ -86,19 +122,10 @@ public class KShortestPathGenerator {
                String currentNodeString = currentNode.getId();
                if (!onPath.contains(currentNodeString))
                   if (onPath.size() < maxLength)
-                     generateAllPaths(currentNodeString, dstNode);
+                     generateSetOfPaths(currentNodeString, dstNode);
             }
-         } else {
-            Path path = generatePath(pathNodes);
-            boolean containsCloudNode = false;
-            for (Node cloudNode : cloudNodes)
-               if (path.contains(cloudNode))
-                  containsCloudNode = true;
-            if (cloudNode == null && !containsCloudNode)
-               paths.add(path);
-            if (cloudNode != null && path.contains(cloudNode))
-               paths.add(path);
-         }
+         } else
+            paths.add(generatePath(pathNodes));
          pathNodes.pop();
          onPath.remove(srcNode);
       }
@@ -126,9 +153,8 @@ public class KShortestPathGenerator {
          paths.sort(Comparator.comparingInt(Path::size));
       }
 
-      List<Path> getPaths() {
+      public List<Path> getPaths() {
          return paths;
       }
-
    }
 }
