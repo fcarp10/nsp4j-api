@@ -63,12 +63,12 @@ public class Parameters {
    }
 
    /**
-    * Calculate calculateDistance between two points in latitude and longitude taking
-    * into account height difference. If you are not interested in height
+    * Calculate calculateDistance between two points in latitude and longitude
+    * taking into account height difference. If you are not interested in height
     * difference pass 0.0. Uses Haversine method as its base.
     * <p>
-    * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
-    * el2 End altitude in meters
+    * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters el2
+    * End altitude in meters
     *
     * @returns Distance in Meters
     */
@@ -76,9 +76,8 @@ public class Parameters {
       final int earthRadius = 6371;
       double latDistance = Math.toRadians(lat2 - lat1);
       double lonDistance = Math.toRadians(lon2 - lon1);
-      double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-              + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-              * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+      double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(lat1))
+            * Math.cos(Math.toRadians(lat2)) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
       double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       double distance = earthRadius * c * 1000;
       distance = Math.pow(distance, 2);
@@ -130,7 +129,8 @@ public class Parameters {
                n.addAttribute(NODE_SERVER_CAP, (int) nodes.get(0).getAttribute(NODE_SERVER_CAP));
             if (n.getAttribute(SERVER_PROCESS_DELAY) == null)
                n.addAttribute(SERVER_PROCESS_DELAY, (int) nodes.get(0).getAttribute(SERVER_PROCESS_DELAY));
-            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(NODE_SERVER_CAP), n.getAttribute(SERVER_PROCESS_DELAY)));
+            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(NODE_SERVER_CAP),
+                  n.getAttribute(SERVER_PROCESS_DELAY)));
          }
       }
    }
@@ -142,14 +142,18 @@ public class Parameters {
       if (dtf.getSrc() == null && dtf.getDst() == null) {
          for (Node src : nodes)
             for (Node dst : nodes) {
-               if (src == dst) continue;
-               if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null) continue;
-               TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServices(), dtf.getServiceLengthMult());
-               trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(), dtf.getMaxBw());
+               if (src == dst)
+                  continue;
+               if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null)
+                  continue;
+               TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServices(),
+                     dtf.getServiceLengthMult());
+               trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(),
+                     dtf.getMaxBw());
                trafficFlow.setPaths(paths);
                trafficFlows.add(trafficFlow);
             }
-         trafficFlows.remove(0); //remove default traffic flow
+         trafficFlows.remove(0); // remove default traffic flow
          // specific traffic flows
       } else
          for (TrafficFlow trafficFlow : trafficFlows) {
@@ -165,8 +169,6 @@ public class Parameters {
          Service service = getServiceChain(serviceId);
          List<Function> functions = new ArrayList<>();
          int multFactor = trafficFlow.getServiceLengthMult()[rndService];
-         int modifiedId;
-
          // create new chain considering the multFactor
          int[] chain = new int[service.getChain().length * multFactor];
          for (int i = 0; i < service.getChain().length; i++) {
@@ -183,20 +185,18 @@ public class Parameters {
          }
          for (Integer type : chain)
             functions.add(getFunction(type));
-
          StringBuilder id = new StringBuilder();
          for (Integer myInt : chain)
             id.append(myInt);
-         modifiedId = Integer.parseInt(id.toString());
-
-         services.add(new Service(modifiedId, service.getMaxDelay(), service.getMaxPropagationDelay(), functions, trafficFlow, service.getAttributes()));
+         services.add(new Service(id.toString(), service.getMaxDelay(), service.getMaxPropagationDelay(), functions,
+               trafficFlow, service.getAttributes()));
       }
    }
 
    private Service getServiceChain(int id) {
       Service service = null;
       for (Service s : serviceChains)
-         if (id == s.getId()) {
+         if (id == Integer.valueOf(s.getId())) {
             service = s;
             break;
          }

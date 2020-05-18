@@ -15,15 +15,16 @@ public class ParametersTest {
 
    @Test
    public void parameters() throws URISyntaxException {
-      String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
-      Parameters pm = ConfigFiles.readParameters(path, "/atlanta.yml");
+      String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
+            .getParent();
+      Parameters pm = ConfigFiles.readParameters(path, "/7nodes_only_edge.yml");
       pm.initialize(path);
       assertNotNull(pm.getScenario());
       assertNotNull(pm.getServers());
       for (Service s : pm.getServices()) {
          assertNotNull(s.getAttribute(SERVICE_MIN_PATHS));
          assertNotNull(s.getAttribute(SERVICE_MAX_PATHS));
-         assertTrue(s.getMaxDelay() > 0);
+         assertTrue(s.getMaxPropagationDelay() > 0);
          for (Function f : s.getFunctions()) {
             assertNotNull(f.getAttribute(FUNCTION_REPLICABLE));
             assertNotNull(f.getAttribute(FUNCTION_LOAD_RATIO));
@@ -34,7 +35,6 @@ public class ParametersTest {
             assertNotNull(f.getAttribute(FUNCTION_MAX_DELAY));
             assertNotNull(f.getAttribute(FUNCTION_MIN_PROCESS_DELAY));
             assertNotNull(f.getAttribute(FUNCTION_PROCESS_DELAY));
-            assertNotNull(f.getAttribute(FUNCTION_MIGRATION_DELAY));
          }
          assertTrue(s.getTrafficFlow().getDemands().size() > 0);
          assertTrue(s.getTrafficFlow().getPaths().size() > 0);

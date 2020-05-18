@@ -1,6 +1,5 @@
 package manager.elements;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
@@ -9,7 +8,7 @@ import java.util.Map;
 
 public class Service {
 
-   private int id;
+   private String id;
    private int[] chain;
    @JsonProperty("max_delay")
    private double maxDelay;
@@ -23,7 +22,8 @@ public class Service {
       attributes = new HashMap<>();
    }
 
-   public Service(int id, double maxDelay, double maxPropagationDelay, List<Function> functions, TrafficFlow trafficFlow, Map<String, Object> attributes) {
+   public Service(String id, double maxDelay, double maxPropagationDelay, List<Function> functions,
+         TrafficFlow trafficFlow, Map<String, Object> attributes) {
       this.id = id;
       this.maxDelay = maxDelay;
       this.maxPropagationDelay = maxPropagationDelay;
@@ -40,7 +40,7 @@ public class Service {
       return attributes;
    }
 
-   public int getId() {
+   public String getId() {
       return id;
    }
 
