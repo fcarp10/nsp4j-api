@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
 public class TrafficFlow {
 
    private String src;
    private String dst;
    private int[] services;
-   @JsonProperty("service_length_mult")
-   private int[] serviceLengthMult;
+   @JsonProperty("service_length")
+   private int[] serviceLength;
    private List<Integer> demands;
    private List<Boolean> aux;
    private List<Path> paths;
@@ -27,21 +26,20 @@ public class TrafficFlow {
    @JsonProperty("max_bw")
    private int maxBw;
 
-
    public TrafficFlow() {
       demands = new ArrayList<>();
       paths = new ArrayList<>();
       aux = new ArrayList<>();
    }
 
-   public TrafficFlow(String src, String dst, int[] services, int[] serviceLengthMult) {
+   public TrafficFlow(String src, String dst, int[] services, int[] serviceLength) {
       demands = new ArrayList<>();
       paths = new ArrayList<>();
       aux = new ArrayList<>();
       this.src = src;
       this.dst = dst;
       this.services = services;
-      this.serviceLengthMult = serviceLengthMult;
+      this.serviceLength = serviceLength;
    }
 
    public void generateTrafficDemands(Random rnd, int minDem, int maxDem, int minBw, int maxBw) {
@@ -64,8 +62,8 @@ public class TrafficFlow {
       return services;
    }
 
-   public int[] getServiceLengthMult() {
-      return serviceLengthMult;
+   public int[] getServiceLength() {
+      return serviceLength;
    }
 
    public void setSrc(String src) {

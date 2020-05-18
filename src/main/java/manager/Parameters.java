@@ -147,7 +147,7 @@ public class Parameters {
                if (src.getAttribute(NODE_CLOUD) != null || dst.getAttribute(NODE_CLOUD) != null)
                   continue;
                TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServices(),
-                     dtf.getServiceLengthMult());
+                     dtf.getServiceLength());
                trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(),
                      dtf.getMaxBw());
                trafficFlow.setPaths(paths);
@@ -168,21 +168,10 @@ public class Parameters {
          int serviceId = trafficFlow.getServices()[rndService];
          Service service = getServiceChain(serviceId);
          List<Function> functions = new ArrayList<>();
-         int multFactor = trafficFlow.getServiceLengthMult()[rndService];
-         // create new chain considering the multFactor
-         int[] chain = new int[service.getChain().length * multFactor];
-         for (int i = 0; i < service.getChain().length; i++) {
-            chain[i] = service.getChain()[i];
-            for (int j = 0; j < multFactor; j++)
-               chain[i + (service.getChain().length * j)] = service.getChain()[i];
-         }
-         // shuffle the elements randomly
-         for (int i = 0; i < chain.length; i++) {
-            int randomIndexToSwap = rnd.nextInt(chain.length);
-            int temp = chain[randomIndexToSwap];
-            chain[randomIndexToSwap] = chain[i];
-            chain[i] = temp;
-         }
+         int serviceLength = trafficFlow.getServiceLength()[rndService];
+         int[] chain = new int[serviceLength];
+         for (int i = 0; i < serviceLength; i++)
+            chain[i] = service.getChain()[rnd.nextInt(service.getChain().length)];
          for (Integer type : chain)
             functions.add(getFunction(type));
          StringBuilder id = new StringBuilder();
