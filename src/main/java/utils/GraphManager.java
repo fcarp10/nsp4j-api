@@ -25,7 +25,7 @@ public class GraphManager {
       if (!path.endsWith("/"))
          path += "/";
       try {
-         graph.read(path + filename + ".dgs");
+         graph.read(path + filename);
       } catch (IOException e) {
          log.error(e.toString());
       } catch (GraphParseException e) {
@@ -48,8 +48,7 @@ public class GraphManager {
          Scanner input = new Scanner(stream);
          while (input.hasNext()) {
             String sPath = input.nextLine();
-            String[] pNodes = sPath.replaceAll("\\s+", "")
-                    .replace("[", "").replace("]", "").split(",");
+            String[] pNodes = sPath.replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",");
             Path path = new Path();
             for (int i = 0; i < pNodes.length - 1; i++) {
                Node node = graph.getNode(pNodes[i]);
