@@ -2,12 +2,17 @@ package utils;
 
 public class Definitions {
    // node and server parameters
-   public static final String NODE_NUM_SERVERS = "num_servers";
-   public static final String NODE_SERVER_CAP = "server_capacity";
-   public static final String SERVER_PROCESS_DELAY = "process_delay";
+   public static final String NODE_NUM_SERVERS = "num_servers_node";
+   public static final String SERVER_CAPACITY = "server_capacity";
+   public static final String SERVER_PROCESS_DELAY = "server_process_delay";
    public static final String NODE_CLOUD = "node_cloud";
+   public static final String LONGITUDE_LABEL_1 = "Longitude";
+   public static final String LATITUDE_LABEL_1 = "Latitude";
+   public static final String LONGITUDE_LABEL_2 = "x";
+   public static final String LATITUDE_LABEL_2 = "y";
    // link parameters
    public static final String LINK_CAPACITY = "capacity";
+   public static final String LINK_CAPACITY_DEFAULT = "link_capacity";
    public static final String LINK_DELAY = "delay";
    public static final String LINK_DISTANCE = "distance";
    // service parameters

@@ -47,7 +47,7 @@ public class Parameters {
    private int totalNumFunctions;
    private List<Long> seeds;
    private int seedCounter;
-   private String scenario;
+   private String graphName;
    private Random rnd;
 
    public Parameters() {
@@ -84,17 +84,18 @@ public class Parameters {
       return Math.sqrt(distance);
    }
 
-   public void initialize(String path) {
+   public void initialize(String topologyFile, String pathsFile, boolean directedEdges) {
       readSeeds();
       rnd = new Random(getSeed());
       new GraphManager();
-      graph = GraphManager.importTopology(path, scenario);
+      graph = GraphManager.importTopology(topologyFile, directedEdges);
+      paths = GraphManager.importPaths(graph, pathsFile);
       try {
          nodes.addAll(graph.getNodeSet());
          links.addAll(graph.getEdgeSet());
          setLinkParameters();
          generateServers();
-         generateTrafficFlows(path);
+         generateTrafficFlows();
          createSetOfServices();
          calculateAuxiliaryValues();
       } catch (Exception e) {
@@ -104,14 +105,22 @@ public class Parameters {
    }
 
    private void setLinkParameters() {
+      String longitudeLabel, latitudeLabel;
+      if (links.get(0).getSourceNode().getAttribute(LONGITUDE_LABEL_1) != null) {
+         longitudeLabel = LONGITUDE_LABEL_1;
+         latitudeLabel = LATITUDE_LABEL_1;
+      } else {
+         longitudeLabel = LONGITUDE_LABEL_2;
+         latitudeLabel = LATITUDE_LABEL_2;
+      }
       for (Edge link : links) {
          if (link.getAttribute(LINK_CAPACITY) == null)
-            link.addAttribute(LINK_CAPACITY, (int) links.get(0).getAttribute(LINK_CAPACITY));
+            link.addAttribute(LINK_CAPACITY, (int) aux.get(LINK_CAPACITY_DEFAULT));
          if (link.getAttribute(LINK_DELAY) == null) {
-            double nLon = link.getSourceNode().getAttribute("x");
-            double nLat = link.getSourceNode().getAttribute("y");
-            double mLon = link.getTargetNode().getAttribute("x");
-            double mLat = link.getTargetNode().getAttribute("y");
+            double nLon = link.getSourceNode().getAttribute(longitudeLabel);
+            double nLat = link.getSourceNode().getAttribute(latitudeLabel);
+            double mLon = link.getTargetNode().getAttribute(longitudeLabel);
+            double mLat = link.getTargetNode().getAttribute(latitudeLabel);
             double distance = calculateDistance(nLat, mLat, nLon, mLon) / 1000; // convert m to km
             link.addAttribute(LINK_DISTANCE, distance);
             double delay = distance / 200000; // in sec
@@ -123,20 +132,16 @@ public class Parameters {
    private void generateServers() {
       for (Node n : nodes) {
          if (n.getAttribute(NODE_NUM_SERVERS) == null)
-            n.addAttribute(NODE_NUM_SERVERS, (int) nodes.get(0).getAttribute(NODE_NUM_SERVERS));
+            n.addAttribute(NODE_NUM_SERVERS, (int) aux.get(NODE_NUM_SERVERS));
          for (int s = 0; s < (int) n.getAttribute(NODE_NUM_SERVERS); s++) {
-            if (n.getAttribute(NODE_SERVER_CAP) == null)
-               n.addAttribute(NODE_SERVER_CAP, (int) nodes.get(0).getAttribute(NODE_SERVER_CAP));
-            if (n.getAttribute(SERVER_PROCESS_DELAY) == null)
-               n.addAttribute(SERVER_PROCESS_DELAY, (int) nodes.get(0).getAttribute(SERVER_PROCESS_DELAY));
-            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(NODE_SERVER_CAP),
-                  n.getAttribute(SERVER_PROCESS_DELAY)));
+            if (n.getAttribute(SERVER_CAPACITY) == null)
+               n.addAttribute(SERVER_CAPACITY, (int) aux.get(SERVER_CAPACITY));
+            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(SERVER_CAPACITY)));
          }
       }
    }
 
-   private void generateTrafficFlows(String path) {
-      paths = GraphManager.importPaths(graph, path, scenario + ".txt");
+   private void generateTrafficFlows() {
       TrafficFlow dtf = trafficFlows.get(0);
       // traffic flows are not specified in the input file
       if (dtf.getSrc() == null && dtf.getDst() == null) {
@@ -150,7 +155,10 @@ public class Parameters {
                      dtf.getServiceLength());
                trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(),
                      dtf.getMaxBw());
-               trafficFlow.setPaths(paths);
+               for (Path p : paths)
+                  if (p.getNodePath().get(0).getId().equals(src.getId())
+                        && p.getNodePath().get(p.size() - 1).getId().equals(dst.getId()))
+                     trafficFlow.setAdmissiblePath(p);
                trafficFlows.add(trafficFlow);
             }
          trafficFlows.remove(0); // remove default traffic flow
@@ -158,7 +166,10 @@ public class Parameters {
       } else
          for (TrafficFlow trafficFlow : trafficFlows) {
             trafficFlow.generateTrafficDemands(rnd);
-            trafficFlow.setPaths(paths);
+            for (Path p : paths)
+               if (p.getNodePath().get(0).getId().equals(trafficFlow.getSrc())
+                     && p.getNodePath().get(p.size() - 1).getId().equals(trafficFlow.getDst()))
+                  trafficFlow.setAdmissiblePath(p);
          }
    }
 
@@ -252,12 +263,12 @@ public class Parameters {
       return aux.get(key);
    }
 
-   public String getScenario() {
-      return scenario;
+   public String getGraphName() {
+      return graphName;
    }
 
-   public void setScenario(String scenario) {
-      this.scenario = scenario;
+   public void setGraphName(String graphName) {
+      this.graphName = graphName;
    }
 
    public List<Service> getServices() {

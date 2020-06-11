@@ -86,12 +86,6 @@ public class TrafficFlow {
       return paths;
    }
 
-   public void setPaths(List<Path> allPaths) {
-      for (Path p : allPaths)
-         if (p.getNodePath().get(0).getId().equals(src) && p.getNodePath().get(p.size() - 1).getId().equals(dst))
-            paths.add(p);
-   }
-
    public void setAdmissiblePath(Path admissiblePath) {
       this.paths.add(admissiblePath);
    }

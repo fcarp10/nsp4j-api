@@ -15,11 +15,16 @@ public class ParametersTest {
 
    @Test
    public void parameters() throws URISyntaxException {
+
+      final String graphName = "ion";
+      final String extensionGraph = ".gml";
+      final boolean directedEdges = false;
       String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
-            .getParent();
-      Parameters pm = ConfigFiles.readParameters(path, "/7nodes_only_edge.yml");
-      pm.initialize(path);
-      assertNotNull(pm.getScenario());
+            .getParent() + "/";
+
+      Parameters pm = ConfigFiles.readParameters(path + graphName + ".yml");
+      pm.initialize(path + graphName + extensionGraph, path + graphName + ".txt", directedEdges);
+      assertNotNull(pm.getGraphName());
       assertNotNull(pm.getServers());
       for (Service s : pm.getServices()) {
          assertNotNull(s.getAttribute(SERVICE_MIN_PATHS));

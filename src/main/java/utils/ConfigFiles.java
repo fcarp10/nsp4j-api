@@ -22,14 +22,14 @@ public class ConfigFiles {
       return scanner;
    }
 
-   public static Parameters readParameters(String path, String filename) {
-      path = path.replaceAll("%20", " ");
+   public static Parameters readParameters(String file) {
+      file = file.replaceAll("%20", " ");
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
       Parameters parameters = null;
       try {
-         parameters = mapper.readValue(new File(path + filename), Parameters.class);
-         filename = filename.replace("/", "");
-         parameters.setScenario(filename.split("\\.")[0]);
+         parameters = mapper.readValue(new File(file), Parameters.class);
+         String[] tmp = file.split("/");
+         parameters.setGraphName(tmp[tmp.length - 1].split("\\.")[0]);
       } catch (Exception e) {
          e.printStackTrace();
       }
