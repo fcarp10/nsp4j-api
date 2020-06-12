@@ -5,7 +5,6 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.DefaultGraph;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.stream.GraphParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+
+import static utils.Definitions.*;
 
 public class GraphManager {
 
@@ -38,6 +39,9 @@ public class GraphManager {
                graph.addEdge("e" + dstNodeString + srcNodeString + "-2", dstNodeString, srcNodeString, true);
             }
          }
+         for (Edge edge : graph.getEdgeSet())
+            if (edge.getSourceNode().hasAttribute(NODE_CLOUD) || edge.getTargetNode().hasAttribute(NODE_CLOUD))
+               edge.setAttribute(LINK_CLOUD, true);
       } catch (IOException e) {
          log.error(e.toString());
       } catch (GraphParseException e) {

@@ -38,7 +38,8 @@ public class KShortestPathGenerator {
       for (Node node : graph.getNodeSet()) {
          if (node.getAttribute(NODE_CLOUD) == null)
             nodes.add(node);
-         else intermediateNodes.add(node);
+         else
+            intermediateNodes.add(node);
       }
 
       for (Node src : nodes)
@@ -75,8 +76,15 @@ public class KShortestPathGenerator {
    }
 
    void printKPaths(List<Path> paths, int numOfPaths) {
+      if (paths.size() == 0) {
+         log.error("Not enough paths found, increase max_length or decrease number of k paths");
+         System.exit(-1);
+      }
+      if (paths.size() < numOfPaths)
+         log.warn("Not enough paths found, increase max_length or decrease number of k paths");
       for (int p = 0; p < numOfPaths; p++)
-         printPath(paths, p);
+         if (p < paths.size())
+            writePlainTextFile.write(paths.get(p) + System.getProperty("line.separator"));
    }
 
    void printKPathsTraversingNodeN(List<Path> paths, int numOfPaths, Node nodeN) {
@@ -84,17 +92,13 @@ public class KShortestPathGenerator {
       for (int p = 0; p < paths.size(); p++)
          if (printedPaths < numOfPaths) {
             if (paths.get(p).getNodePath().contains(nodeN)) {
-               printPath(paths, p);
-               printedPaths++;
+               if (p < paths.size()) {
+                  writePlainTextFile.write(paths.get(p) + System.getProperty("line.separator"));
+                  printedPaths++;
+               }
             }
-         } else break;
-   }
-
-   void printPath(List<Path> paths, int p) {
-      if (p < paths.size())
-         writePlainTextFile.write(paths.get(p) + System.getProperty("line.separator"));
-      else
-         log.error("Not enough paths found, increase max_length or decrease number of k paths");
+         } else
+            break;
    }
 
    private List<Path> generatePaths(Node src, Node dst) {
@@ -117,7 +121,7 @@ public class KShortestPathGenerator {
          pathNodes.push(srcNode);
          onPath.add(srcNode);
          if (!srcNode.equals(dstNode)) {
-            for (Iterator<Node> it = graph.getNode(srcNode).getNeighborNodeIterator(); it.hasNext(); ) {
+            for (Iterator<Node> it = graph.getNode(srcNode).getNeighborNodeIterator(); it.hasNext();) {
                Node currentNode = it.next();
                String currentNodeString = currentNode.getId();
                if (!onPath.contains(currentNodeString))

@@ -12,13 +12,13 @@ public class KShortestPathGeneratorTest {
    @Test
    public void inputParameters() throws URISyntaxException {
 
-      final String graphName = "ion";
+      final String graphName = "palmetto";
       final String extensionGraph = ".gml";
       final boolean directedEdges = false;
-      int MAX_LENGTH = 10;
+      int MAX_LENGTH = 20;
       int NUM_K_PATHS = 3;
       String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
-            .getParent();
+            .getParent() + "/";
 
       Graph graph = GraphManager.importTopology(path + graphName + extensionGraph, directedEdges);
       KShortestPathGenerator generator = new KShortestPathGenerator(path, graphName, graph, MAX_LENGTH);
