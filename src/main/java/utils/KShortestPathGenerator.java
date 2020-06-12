@@ -99,6 +99,10 @@ public class KShortestPathGenerator {
             }
          } else
             break;
+      if (printedPaths < numOfPaths) {
+         log.error("Not enough paths found, increase max_length or decrease number of k paths");
+         System.exit(-1);
+      }
    }
 
    private List<Path> generatePaths(Node src, Node dst) {

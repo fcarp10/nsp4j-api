@@ -16,7 +16,7 @@ public class ParametersTest {
    @Test
    public void parameters() throws URISyntaxException {
 
-      final String graphName = "palmetto";
+      final String graphName = "palmetto_cloud";
       final String extensionGraph = ".gml";
       final boolean directedEdges = false;
       String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())

@@ -139,8 +139,12 @@ public class Parameters {
 
    private void generateServers() {
       for (Node node : nodes) {
-         if (node.getAttribute(NODE_NUM_SERVERS) == null)
-            node.addAttribute(NODE_NUM_SERVERS, (int) aux.get(NODE_NUM_SERVERS));
+         if (node.getAttribute(NODE_NUM_SERVERS) == null) {
+            if (node.hasAttribute(NODE_CLOUD))
+               node.addAttribute(NODE_NUM_SERVERS, (int) aux.get(CLOUD_NUM_SERVERS));
+            else
+               node.addAttribute(NODE_NUM_SERVERS, (int) aux.get(NODE_NUM_SERVERS));
+         }
          for (int s = 0; s < (int) node.getAttribute(NODE_NUM_SERVERS); s++) {
             if (node.getAttribute(SERVER_CAPACITY) == null) {
                if (node.hasAttribute(NODE_CLOUD))

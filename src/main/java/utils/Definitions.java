@@ -3,6 +3,7 @@ package utils;
 public class Definitions {
    // node and server parameters
    public static final String NODE_NUM_SERVERS = "num_servers_node";
+   public static final String CLOUD_NUM_SERVERS = "cloud_num_servers";
    public static final String SERVER_CAPACITY = "server_capacity";
    public static final String CLOUD_SERVER_CAPACITY = "cloud_server_capacity";
    public static final String SERVER_PROCESS_DELAY = "server_process_delay";
