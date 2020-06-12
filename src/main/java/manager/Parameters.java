@@ -36,7 +36,7 @@ public class Parameters {
    // local parameters
    private Graph graph;
    private List<Node> nodes;
-   private List<Edge> links;
+   private List<Edge> edges;
    private List<Server> servers;
    private List<Service> services;
    private List<Path> paths;
@@ -52,7 +52,7 @@ public class Parameters {
 
    public Parameters() {
       nodes = new ArrayList<>();
-      links = new ArrayList<>();
+      edges = new ArrayList<>();
       servers = new ArrayList<>();
       services = new ArrayList<>();
       paths = new ArrayList<>();
@@ -92,7 +92,7 @@ public class Parameters {
       paths = GraphManager.importPaths(graph, pathsFile);
       try {
          nodes.addAll(graph.getNodeSet());
-         links.addAll(graph.getEdgeSet());
+         edges.addAll(graph.getEdgeSet());
          setLinkParameters();
          generateServers();
          generateTrafficFlows();
@@ -105,38 +105,50 @@ public class Parameters {
    }
 
    private void setLinkParameters() {
+
       String longitudeLabel, latitudeLabel;
-      if (links.get(0).getSourceNode().getAttribute(LONGITUDE_LABEL_1) != null) {
+      if (edges.get(0).getSourceNode().getAttribute(LONGITUDE_LABEL_1) != null) {
          longitudeLabel = LONGITUDE_LABEL_1;
          latitudeLabel = LATITUDE_LABEL_1;
       } else {
          longitudeLabel = LONGITUDE_LABEL_2;
          latitudeLabel = LATITUDE_LABEL_2;
       }
-      for (Edge link : links) {
-         if (link.getAttribute(LINK_CAPACITY) == null)
-            link.addAttribute(LINK_CAPACITY, (int) aux.get(LINK_CAPACITY_DEFAULT));
-         if (link.getAttribute(LINK_DELAY) == null) {
-            double nLon = link.getSourceNode().getAttribute(longitudeLabel);
-            double nLat = link.getSourceNode().getAttribute(latitudeLabel);
-            double mLon = link.getTargetNode().getAttribute(longitudeLabel);
-            double mLat = link.getTargetNode().getAttribute(latitudeLabel);
+
+      for (Edge edge : edges) {
+         if (edge.getSourceNode().hasAttribute(NODE_CLOUD) || edge.getTargetNode().hasAttribute(NODE_CLOUD))
+            edge.setAttribute(LINK_CLOUD, true);
+         if (edge.getAttribute(LINK_CAPACITY) == null) {
+            if (edge.hasAttribute(LINK_CLOUD))
+               edge.addAttribute(LINK_CAPACITY, (int) aux.get(CLOUD_LINK_CAPACITY));
+            else
+               edge.addAttribute(LINK_CAPACITY, (int) aux.get(LINK_CAPACITY_DEFAULT));
+         }
+         if (edge.getAttribute(LINK_DELAY) == null) {
+            double nLon = edge.getSourceNode().getAttribute(longitudeLabel);
+            double nLat = edge.getSourceNode().getAttribute(latitudeLabel);
+            double mLon = edge.getTargetNode().getAttribute(longitudeLabel);
+            double mLat = edge.getTargetNode().getAttribute(latitudeLabel);
             double distance = calculateDistance(nLat, mLat, nLon, mLon) / 1000; // convert m to km
-            link.addAttribute(LINK_DISTANCE, distance);
+            edge.addAttribute(LINK_DISTANCE, distance);
             double delay = distance / 200000; // in sec
-            link.addAttribute(LINK_DELAY, delay);
+            edge.addAttribute(LINK_DELAY, delay);
          }
       }
    }
 
    private void generateServers() {
-      for (Node n : nodes) {
-         if (n.getAttribute(NODE_NUM_SERVERS) == null)
-            n.addAttribute(NODE_NUM_SERVERS, (int) aux.get(NODE_NUM_SERVERS));
-         for (int s = 0; s < (int) n.getAttribute(NODE_NUM_SERVERS); s++) {
-            if (n.getAttribute(SERVER_CAPACITY) == null)
-               n.addAttribute(SERVER_CAPACITY, (int) aux.get(SERVER_CAPACITY));
-            servers.add(new Server(n.getId() + "_" + s, n, n.getAttribute(SERVER_CAPACITY)));
+      for (Node node : nodes) {
+         if (node.getAttribute(NODE_NUM_SERVERS) == null)
+            node.addAttribute(NODE_NUM_SERVERS, (int) aux.get(NODE_NUM_SERVERS));
+         for (int s = 0; s < (int) node.getAttribute(NODE_NUM_SERVERS); s++) {
+            if (node.getAttribute(SERVER_CAPACITY) == null) {
+               if (node.hasAttribute(NODE_CLOUD))
+                  node.addAttribute(SERVER_CAPACITY, (int) aux.get(CLOUD_SERVER_CAPACITY));
+               else
+                  node.addAttribute(SERVER_CAPACITY, (int) aux.get(SERVER_CAPACITY));
+            }
+            servers.add(new Server(node.getId() + "_" + s, node, node.getAttribute(SERVER_CAPACITY)));
          }
       }
    }
@@ -312,7 +324,7 @@ public class Parameters {
    }
 
    public List<Edge> getLinks() {
-      return links;
+      return edges;
    }
 
    public int getPathsTrafficFlow() {

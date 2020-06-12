@@ -4,6 +4,7 @@ public class Definitions {
    // node and server parameters
    public static final String NODE_NUM_SERVERS = "num_servers_node";
    public static final String SERVER_CAPACITY = "server_capacity";
+   public static final String CLOUD_SERVER_CAPACITY = "cloud_server_capacity";
    public static final String SERVER_PROCESS_DELAY = "server_process_delay";
    public static final String NODE_CLOUD = "node_cloud";
    public static final String LONGITUDE_LABEL_1 = "Longitude";
@@ -13,6 +14,7 @@ public class Definitions {
    // link parameters
    public static final String LINK_CAPACITY = "capacity";
    public static final String LINK_CAPACITY_DEFAULT = "link_capacity";
+   public static final String CLOUD_LINK_CAPACITY = "cloud_link_capacity";
    public static final String LINK_DELAY = "delay";
    public static final String LINK_DISTANCE = "distance";
    public static final String LINK_CLOUD = "link_cloud";

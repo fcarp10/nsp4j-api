@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
-import static utils.Definitions.*;
-
 public class GraphManager {
 
    private static final Logger log = LoggerFactory.getLogger(GraphManager.class);
@@ -39,9 +37,6 @@ public class GraphManager {
                graph.addEdge("e" + dstNodeString + srcNodeString + "-2", dstNodeString, srcNodeString, true);
             }
          }
-         for (Edge edge : graph.getEdgeSet())
-            if (edge.getSourceNode().hasAttribute(NODE_CLOUD) || edge.getTargetNode().hasAttribute(NODE_CLOUD))
-               edge.setAttribute(LINK_CLOUD, true);
       } catch (IOException e) {
          log.error(e.toString());
       } catch (GraphParseException e) {
