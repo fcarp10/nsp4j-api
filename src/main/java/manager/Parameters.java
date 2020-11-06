@@ -159,8 +159,7 @@ public class Parameters {
 
    private void generateTrafficFlows() {
       TrafficFlow dtf = trafficFlows.get(0);
-      // traffic flows are not specified in the input file
-      if (dtf.getSrc() == null && dtf.getDst() == null) {
+      if (dtf.getSrc() == null && dtf.getDst() == null) { // traffic flows are not specified
          for (Node src : nodes)
             for (Node dst : nodes) {
                if (src == dst)
@@ -169,7 +168,7 @@ public class Parameters {
                   continue;
                TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServices(),
                      dtf.getServiceLength());
-               trafficFlow.generateTrafficDemands(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(),
+               trafficFlow.generateRandomDemandsFromSpecificValues(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(),
                      dtf.getMaxBw());
                for (Path p : paths)
                   if (p.getNodePath().get(0).getId().equals(src.getId())
@@ -178,10 +177,14 @@ public class Parameters {
                trafficFlows.add(trafficFlow);
             }
          trafficFlows.remove(0); // remove default traffic flow
-         // specific traffic flows
-      } else
+
+      } else // traffic flows are specified
          for (TrafficFlow trafficFlow : trafficFlows) {
-            trafficFlow.generateTrafficDemands(rnd);
+            if (trafficFlow.getDemandsSpecific() == null)
+               trafficFlow.generateRandomDemands(rnd); // if traffic demands are not specified
+            else { // if they are specified, the just initialize
+               trafficFlow.generateDemands();
+            }
             for (Path p : paths)
                if (p.getNodePath().get(0).getId().equals(trafficFlow.getSrc())
                      && p.getNodePath().get(p.size() - 1).getId().equals(trafficFlow.getDst()))

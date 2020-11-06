@@ -14,6 +14,8 @@ public class TrafficFlow {
    private int[] services;
    @JsonProperty("service_length")
    private int[] serviceLength;
+   @JsonProperty("demands_specific")
+   private int[] demandsSpecific;
    private List<Integer> demands;
    private List<Boolean> aux;
    private List<Path> paths;
@@ -42,16 +44,21 @@ public class TrafficFlow {
       this.serviceLength = serviceLength;
    }
 
-   public void generateTrafficDemands(Random rnd, int minDem, int maxDem, int minBw, int maxBw) {
+   public void generateRandomDemandsFromSpecificValues(Random rnd, int minDem, int maxDem, int minBw, int maxBw) {
       int numDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
-      for (int td = 0; td < numDemands; td++)
+      for (int i = 0; i < numDemands; i++)
          demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
    }
 
-   public void generateTrafficDemands(Random rnd) {
+   public void generateRandomDemands(Random rnd) {
       int numDemands = rnd.nextInt(maxDem + 1 - minDem) + minDem;
-      for (int td = 0; td < numDemands; td++)
+      for (int i = 0; i < numDemands; i++)
          demands.add(rnd.nextInt(maxBw + 1 - minBw) + minBw);
+   }
+
+   public void generateDemands(){
+      for (int i = 0; i < demandsSpecific.length; i++)
+         demands.add(demandsSpecific[i]);
    }
 
    public String getSrc() {
@@ -64,6 +71,10 @@ public class TrafficFlow {
 
    public int[] getServiceLength() {
       return serviceLength;
+   }
+
+   public int[] getDemandsSpecific() {
+      return demandsSpecific;
    }
 
    public void setSrc(String src) {
