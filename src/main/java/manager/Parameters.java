@@ -23,7 +23,7 @@ public class Parameters {
 
    private static final Logger log = LoggerFactory.getLogger(Parameters.class);
    // auxiliary parameters
-   private Map aux;
+   private Map<String, Object> aux;
    // service definitions
    @JsonProperty("service_chains")
    private List<Service> serviceChains;
@@ -59,7 +59,7 @@ public class Parameters {
       trafficFlows = new ArrayList<>();
       functionTypes = new ArrayList<>();
       serviceChains = new ArrayList<>();
-      aux = new HashMap();
+      aux = new HashMap<String, Object>();
    }
 
    /**
@@ -168,8 +168,8 @@ public class Parameters {
                   continue;
                TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServices(),
                      dtf.getServiceLength());
-               trafficFlow.generateRandomDemandsFromSpecificValues(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(),
-                     dtf.getMaxBw());
+               trafficFlow.generateRandomDemandsFromSpecificValues(rnd, dtf.getMinDem(), dtf.getMaxDem(),
+                     dtf.getMinBw(), dtf.getMaxBw());
                for (Path p : paths)
                   if (p.getNodePath().get(0).getId().equals(src.getId())
                         && p.getNodePath().get(p.size() - 1).getId().equals(dst.getId()))
@@ -354,7 +354,7 @@ public class Parameters {
       return totalNumFunctions;
    }
 
-   public Map getAux() {
+   public Map<String, Object> getAux() {
       return aux;
    }
 }

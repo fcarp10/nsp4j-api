@@ -90,11 +90,10 @@ functionTypes:
   }
 # traffic flow definitions
 traffic_flows:
-  - min_dem: 1
-    max_dem: 3
-    min_bw: 1
-    max_bw: 20 # change "max_cap_server" accordingly
+  - src: "n1"
+    dst: "n2"
+    demands_specific: [3, 35, 17]
     services: [1]
-    service_length: [7]
+    service_length: [3]
 
 ```
