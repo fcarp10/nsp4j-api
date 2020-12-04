@@ -16,6 +16,10 @@ public class Function {
       return attributes.get(key);
    }
 
+   public void setAttribute(String key, Object attr){
+      attributes.put(key, attr);
+   }
+
    public int getType() {
       return type;
    }

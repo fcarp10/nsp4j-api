@@ -168,8 +168,8 @@ public class Parameters {
                   continue;
                TrafficFlow trafficFlow = new TrafficFlow(src.getId(), dst.getId(), dtf.getServices(),
                      dtf.getServiceLength());
-               trafficFlow.generateRandomDemandsFromSpecificValues(rnd, dtf.getMinDem(), dtf.getMaxDem(), dtf.getMinBw(),
-                     dtf.getMaxBw());
+               trafficFlow.generateRandomDemandsFromSpecificValues(rnd, dtf.getMinDem(), dtf.getMaxDem(),
+                     dtf.getMinBw(), dtf.getMaxBw());
                for (Path p : paths)
                   if (p.getNodePath().get(0).getId().equals(src.getId())
                         && p.getNodePath().get(p.size() - 1).getId().equals(dst.getId()))
@@ -196,14 +196,14 @@ public class Parameters {
       for (TrafficFlow trafficFlow : trafficFlows) {
          int rndService = rnd.nextInt(trafficFlow.getServices().length);
          int serviceId = trafficFlow.getServices()[rndService];
-         Service service = getServiceChain(serviceId);
+         Service service = createServiceChain(serviceId);
          List<Function> functions = new ArrayList<>();
          int serviceLength = trafficFlow.getServiceLength()[rndService];
          int[] chain = new int[serviceLength];
          for (int i = 0; i < serviceLength; i++)
             chain[i] = service.getChain()[rnd.nextInt(service.getChain().length)];
          for (Integer type : chain)
-            functions.add(getFunction(type));
+            functions.add(createFunction(type));
          StringBuilder id = new StringBuilder();
          for (Integer myInt : chain)
             id.append(myInt);
@@ -212,7 +212,7 @@ public class Parameters {
       }
    }
 
-   private Service getServiceChain(int id) {
+   private Service createServiceChain(int id) {
       Service service = null;
       for (Service s : serviceChains)
          if (id == Integer.valueOf(s.getId())) {
@@ -222,11 +222,24 @@ public class Parameters {
       return service;
    }
 
-   private Function getFunction(int type) {
-      Function function = null;
-      for (Function f : functionTypes)
-         if (type == f.getType()) {
-            function = f;
+   private Function createFunction(int type) {
+      Function function = new Function();
+      for (Function fType : functionTypes)
+         if (type == fType.getType()) {
+            Iterator<String> it = fType.getAttributes().keySet().iterator();
+            while (it.hasNext()) {
+               String key = (String) it.next();
+               Object values = fType.getAttributes().get(key);
+               Object value;
+               if (values instanceof ArrayList) {
+                  List<Double> minMaxValues = (List<Double>) values;
+                  Double minValue = minMaxValues.get(0);
+                  Double maxValue = minMaxValues.get(1);
+                  value = minValue + rnd.nextDouble() * (maxValue - minValue);
+               } else
+                  value = values;
+               function.setAttribute(key, value);
+            }
             break;
          }
       return function;
