@@ -23,7 +23,7 @@ public class Parameters {
 
    private static final Logger log = LoggerFactory.getLogger(Parameters.class);
    // auxiliary parameters
-   private Map aux;
+   private Map<String, Object> aux;
    // service definitions
    @JsonProperty("service_chains")
    private List<Service> serviceChains;
@@ -59,7 +59,7 @@ public class Parameters {
       trafficFlows = new ArrayList<>();
       functionTypes = new ArrayList<>();
       serviceChains = new ArrayList<>();
-      aux = new HashMap();
+      aux = new HashMap<String, Object>();
    }
 
    /**
@@ -367,7 +367,7 @@ public class Parameters {
       return totalNumFunctions;
    }
 
-   public Map getAux() {
+   public Map<String, Object> getAux() {
       return aux;
    }
 }
