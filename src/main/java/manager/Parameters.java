@@ -223,7 +223,7 @@ public class Parameters {
    }
 
    private Function createFunction(int type) {
-      Function function = new Function();
+      Function function = new Function(type);
       for (Function fType : functionTypes)
          if (type == fType.getType()) {
             Iterator<String> it = fType.getAttributes().keySet().iterator();

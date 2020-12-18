@@ -12,11 +12,16 @@ public class Function {
       attributes = new HashMap<>();
    }
 
+   public Function(int type) {
+      attributes = new HashMap<>();
+      this.type = type;
+   }
+
    public Object getAttribute(String key) {
       return attributes.get(key);
    }
 
-   public void setAttribute(String key, Object attr){
+   public void setAttribute(String key, Object attr) {
       attributes.put(key, attr);
    }
 
