@@ -194,11 +194,29 @@ public class Parameters {
 
    private void createSetOfServices() {
       for (TrafficFlow trafficFlow : trafficFlows) {
-         int rndService = rnd.nextInt(trafficFlow.getServices().length);
-         int serviceId = trafficFlow.getServices()[rndService];
+         int[] servicesArray = null;
+         if (trafficFlow.getServices() != null)
+            servicesArray = trafficFlow.getServices();
+         else {
+            ArrayList<Integer> list = (ArrayList<Integer>) aux.get(SERVICES);
+            servicesArray = new int[list.size()];
+            for (int i = 0; i < list.size(); i++)
+               servicesArray[i] = list.get(i);
+         }
+         int rndService = rnd.nextInt(servicesArray.length);
+         int serviceId = servicesArray[rndService];
          Service service = createServiceChain(serviceId);
          List<Function> functions = new ArrayList<>();
-         int serviceLength = trafficFlow.getServiceLength()[rndService];
+         int[] serviceLengthArray = null;
+         if (trafficFlow.getServiceLength() != null)
+            serviceLengthArray = trafficFlow.getServiceLength();
+         else {
+            ArrayList<Integer> list = (ArrayList<Integer>) aux.get(SERVICE_LENGTH);
+            serviceLengthArray = new int[list.size()];
+            for (int i = 0; i < list.size(); i++)
+               serviceLengthArray[i] = list.get(i);
+         }
+         int serviceLength = serviceLengthArray[rndService];
          int[] chain = new int[serviceLength];
          for (int i = 0; i < serviceLength; i++)
             chain[i] = service.getChain()[rnd.nextInt(service.getChain().length)];
