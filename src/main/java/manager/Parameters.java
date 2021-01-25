@@ -84,7 +84,7 @@ public class Parameters {
       return Math.sqrt(distance);
    }
 
-   public void initialize(String topologyFile, String pathsFile, boolean directedEdges) {
+   public boolean initialize(String topologyFile, String pathsFile, boolean directedEdges) {
       readSeeds();
       rnd = new Random(getSeed());
       new GraphManager();
@@ -98,9 +98,10 @@ public class Parameters {
          generateTrafficFlows();
          createSetOfServices();
          calculateAuxiliaryValues();
+         return true;
       } catch (Exception e) {
          log.error("error generating parameters: " + e.toString());
-         System.exit(1);
+         return false;
       }
    }
 
