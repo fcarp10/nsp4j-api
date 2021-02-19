@@ -17,12 +17,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import static utils.Definitions.NODE_CLOUD;
 
 public class GraphManager {
 
    private static final Logger log = LoggerFactory.getLogger(GraphManager.class);
 
-   public static Graph importTopology(String file, boolean directedEdges) {
+   public static Graph importTopology(String file, boolean directedEdges, boolean allNodesToCloud) {
       Graph graph = new DefaultGraph("graph");
       try {
          graph.read(file);
@@ -35,6 +36,21 @@ public class GraphManager {
                graph.removeEdge(edge);
                graph.addEdge("e" + srcNodeString + dstNodeString + "-1", srcNodeString, dstNodeString, true);
                graph.addEdge("e" + dstNodeString + srcNodeString + "-2", dstNodeString, srcNodeString, true);
+            }
+         }
+         if (allNodesToCloud) {
+            Set<Node> nodes = new HashSet<>();
+            nodes.addAll(graph.getNodeSet());
+            for (Node cloudNode : nodes) {
+               if (cloudNode.getAttribute(NODE_CLOUD) != null)
+                  for (Node node : nodes) {
+                     if (node.getAttribute(NODE_CLOUD) == null) {
+                        graph.addEdge("e" + node.getId() + cloudNode.getId() + "-1", node.getId(), cloudNode.getId(),
+                              true);
+                        graph.addEdge("e" + cloudNode.getId() + node.getId() + "-2", cloudNode.getId(), node.getId(),
+                              true);
+                     }
+                  }
             }
          }
       } catch (IOException e) {

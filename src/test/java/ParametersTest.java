@@ -19,11 +19,12 @@ public class ParametersTest {
       final String graphName = "7nodes";
       final String extensionGraph = ".dgs";
       final boolean directedEdges = true;
+      final boolean allNodesToCloud = true;
       String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
             .getParent() + "/";
 
       Parameters pm = ConfigFiles.readParameters(path + graphName + ".yml");
-      pm.initialize(path + graphName + extensionGraph, path + graphName + ".txt", directedEdges);
+      pm.initialize(path + graphName + extensionGraph, path + graphName + ".txt", directedEdges, allNodesToCloud);
       assertNotNull(pm.getGraphName());
       assertNotNull(pm.getServers());
       for (Service s : pm.getServices()) {
