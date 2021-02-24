@@ -16,10 +16,10 @@ public class ParametersTest {
    @Test
    public void parameters() throws URISyntaxException {
 
-      final String graphName = "7nodes";
-      final String extensionGraph = ".dgs";
+      final String graphName = "palmetto-plot";
+      final String extensionGraph = ".gml";
       final boolean directedEdges = true;
-      final boolean allNodesToCloud = true;
+      final boolean allNodesToCloud = false;
       String path = new File(ConfigFiles.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
             .getParent() + "/";
 
@@ -34,10 +34,9 @@ public class ParametersTest {
          for (Function f : s.getFunctions()) {
             assertNotNull(f.getAttribute(FUNCTION_REPLICABLE));
             assertNotNull(f.getAttribute(FUNCTION_LOAD_RATIO));
-            assertNotNull(f.getAttribute(FUNCTION_OVERHEAD));
+            assertNotNull(f.getAttribute(FUNCTION_OVERHEAD_RATIO));
             assertNotNull(f.getAttribute(FUNCTION_SYNC_LOAD_RATIO));
             assertNotNull(f.getAttribute(FUNCTION_PROCESS_TRAFFIC_DELAY));
-            assertNotNull(f.getAttribute(FUNCTION_MAX_CAP_SERVER));
             assertNotNull(f.getAttribute(FUNCTION_MAX_DELAY));
             assertNotNull(f.getAttribute(FUNCTION_MIN_PROCESS_DELAY));
             assertNotNull(f.getAttribute(FUNCTION_PROCESS_DELAY));
