@@ -100,7 +100,7 @@ public class Parameters {
          calculateAuxiliaryValues();
          return true;
       } catch (Exception e) {
-         log.error("error generating parameters: " + e.toString());
+         log.warn("error generating parameters: " + e.toString());
          return false;
       }
    }
