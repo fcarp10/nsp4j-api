@@ -84,11 +84,11 @@ public class Parameters {
       return Math.sqrt(distance);
    }
 
-   public boolean initialize(String topologyFile, String pathsFile, boolean directedEdges) {
+   public boolean initialize(String topologyFile, String pathsFile, boolean directedEdges, boolean allNodesToCloud) {
       readSeeds();
       rnd = new Random(getSeed());
       new GraphManager();
-      graph = GraphManager.importTopology(topologyFile, directedEdges);
+      graph = GraphManager.importTopology(topologyFile, directedEdges, allNodesToCloud);
       paths = GraphManager.importPaths(graph, pathsFile);
       try {
          nodes.addAll(graph.getNodeSet());
