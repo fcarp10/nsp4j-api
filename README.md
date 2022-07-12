@@ -1,20 +1,17 @@
 # nsp4j-api
 
-## Network and Service management Planning framework for Java - API
+Network and Service management Planning framework for Java - API
+
+Configuration files: 
+
+- `*.dgs`: topology description file
+- `*.txt`: paths file
+- `*.yml`: parameters file
 
 
-### Configuration
+### Topology description file
 
-Example configuration files: 
-
-- `example.dgs`: topology description file
-- `example.txt`: paths file
-- `example.yml`: parameters file
-
-
-### Topology file
-
-The network topology is specified using GraphStream guidelines, for example:
+The network topology is specified using GraphStream guidelines:
 
 ```
 DGS004
@@ -29,18 +26,26 @@ ae n2n3 n2 > n3
 
 ```
 
-- `an` adds a node. The command is followed by a unique node identifier, that can be a single word or a string delimited by the double quote character. Values x and y on the server represent the coordinates of the nodes. For each node other parameters can be specified, for instance, the number of servers or the server capacity.
+- `an` adds a node. The command is followed by a unique node identifier, that
+  can be a single word or a string delimited by the double quote character.
+  Values x and y on the server represent the coordinates of the nodes. For each
+  node, additional parameters can be specified, for instance, the number of
+  servers or capacity.
 
-- `ae` adds an link. This command must be followed by a unique identifier of the link, following with the identifiers of two connecting nodes. For each link, other parameters can be specified, for instance, the link capacity 
+- `ae` adds an link. This command must be followed by a unique identifier of the
+  link, following with the identifiers of two connecting nodes. For each link,
+  additional parameters can be specified, for instance, the link capacity.
 
-For further information, see [Graphstream](http://graphstream-project.org/doc/Advanced-Concepts/The-DGS-File-Format/) documentation.
+For further information, see
+[Graphstream](http://graphstream-project.org/doc/Advanced-Concepts/The-DGS-File-Format/)
+documentation.
 
 
 ### Paths file
 
-This file contains all admissible paths for the topology, for example:
+File containing all admissible paths:
 
-```
+``` 
 [n1, n2, n3, n7, n9]
 [n1, n4, n5, n3, n7, n9]
 [n1, n4, n5, n6, n7, n9]
@@ -49,7 +54,7 @@ This file contains all admissible paths for the topology, for example:
 
 ### Parameters file
 
-This file describes the parameters for the optimization model, for example:
+Parameters for the optimization model:
 
 ```
 # optimization parameters
