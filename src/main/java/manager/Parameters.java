@@ -218,9 +218,14 @@ public class Parameters {
                serviceLengthArray[i] = list.get(i);
          }
          int serviceLength = serviceLengthArray[rndService];
-         int[] chain = new int[serviceLength];
-         for (int i = 0; i < serviceLength; i++)
-            chain[i] = service.getChain()[rnd.nextInt(service.getChain().length)];
+         int[] chain;
+         if (serviceLength > 0){
+            chain = new int[serviceLength];
+            for (int i = 0; i < serviceLength; i++)
+               chain[i] = service.getChain()[rnd.nextInt(service.getChain().length)];
+         } else {
+            chain = service.getChain();
+         }
          for (Integer type : chain)
             functions.add(createFunction(type));
          StringBuilder id = new StringBuilder();
